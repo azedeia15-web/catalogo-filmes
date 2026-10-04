@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://catalogo-filmes-backend-kbk8.onrender.com";
 
 const token = localStorage.getItem("token");
 
