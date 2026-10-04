@@ -4,7 +4,8 @@ if (!token) {
   window.location.href = "login.html";
 }
 
-const API_URL = "https://catalogo-filmes-backend-kbk8.onrender.com";
+const API_URL =
+  "https://catalogo-filmes-backend-kbk8.onrender.com";
 
 const usuario = JSON.parse(
   localStorage.getItem("usuario")
@@ -15,151 +16,189 @@ const usuario = JSON.parse(
 // QUANDO A PÁGINA CARREGAR
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
 
-  const nomeUsuario =
-    document.getElementById("nomeUsuario");
+    const nomeUsuario =
+      document.getElementById("nomeUsuario");
 
-  const btnSair =
-    document.getElementById("btnSair");
-
-
-  // MOSTRAR NOME DO USUÁRIO
-
-  if (nomeUsuario && usuario) {
-    nomeUsuario.textContent =
-      `Olá, ${usuario.nome}`;
-  }
+    const btnSair =
+      document.getElementById("btnSair");
 
 
-  // VERIFICAR SE O USUÁRIO É MEMBRO
-try {
-  const respostaAssinatura = await fetch(
-    `${API_URL}/minha-assinatura`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+    // ======================================
+    // MOSTRAR NOME DO USUÁRIO
+    // ======================================
+
+    if (nomeUsuario && usuario) {
+      nomeUsuario.textContent =
+        `Olá, ${usuario.nome}`;
     }
-  );
 
-  if (respostaAssinatura.ok) {
-    const dadosAssinatura =
-      await respostaAssinatura.json();
 
-    if (
-      dadosAssinatura.membro &&
-      nomeUsuario
-    ) {
-      const badge =
-        document.createElement("span");
+    // ======================================
+    // VERIFICAR SE É MEMBRO
+    // ======================================
 
-      badge.id = "badgeMembro";
+    try {
 
-      badge.className =
-        "whitespace-nowrap rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white";
+      const respostaAssinatura =
+        await fetch(
+          `${API_URL}/minha-assinatura`,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`
+            }
+          }
+        );
 
-      badge.textContent =
-        `★ ${dadosAssinatura.assinatura.plano}`;
+      if (respostaAssinatura.ok) {
 
-      nomeUsuario.insertAdjacentElement(
-        "afterend",
-        badge
+        const dadosAssinatura =
+          await respostaAssinatura.json();
+
+        if (
+          dadosAssinatura.membro &&
+          nomeUsuario &&
+          !document.getElementById(
+            "badgeMembro"
+          )
+        ) {
+
+          const badge =
+            document.createElement(
+              "span"
+            );
+
+          badge.id =
+            "badgeMembro";
+
+          badge.className =
+            "whitespace-nowrap rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white";
+
+          badge.textContent =
+            `★ ${dadosAssinatura.assinatura.plano}`;
+
+          nomeUsuario.insertAdjacentElement(
+            "afterend",
+            badge
+          );
+        }
+      }
+
+    } catch (erro) {
+
+      console.error(
+        "Erro ao verificar assinatura:",
+        erro
       );
     }
-  }
-
-} catch (erro) {
-  console.error(
-    "Erro ao verificar assinatura:",
-    erro
-  );
-}
 
 
+    // ======================================
+    // BOTÃO SAIR
+    // ======================================
 
-  // BOTÃO SAIR
+    if (btnSair) {
 
-  if (btnSair) {
+      btnSair.addEventListener(
+        "click",
+        () => {
 
-    btnSair.addEventListener("click", () => {
-
-      localStorage.removeItem("token");
-      localStorage.removeItem("usuario");
-
-      window.location.href =
-        "login.html";
-
-    });
-  }
-
-
-  // FORMULÁRIO DE REVIEW
-
-  const formulario =
-    document.getElementById("formReview");
-
-  if (formulario) {
-
-    formulario.addEventListener(
-      "submit",
-      cadastrarReview
-    );
-
-  }
-
-
-  // BUSCA
-
-  const searchInput =
-    document.getElementById("searchInput");
-
-  if (searchInput) {
-
-    searchInput.addEventListener(
-      "input",
-      () => {
-
-        const termo =
-          searchInput.value.toLowerCase();
-
-        const cards =
-          document.querySelectorAll(
-            "[data-search]"
+          localStorage.removeItem(
+            "token"
           );
 
-        cards.forEach((card) => {
+          localStorage.removeItem(
+            "usuario"
+          );
 
-          const conteudo =
-            card
-              .getAttribute("data-search")
+          window.location.href =
+            "login.html";
+        }
+      );
+    }
+
+
+    // ======================================
+    // FORMULÁRIO DE REVIEW
+    // ======================================
+
+    const formulario =
+      document.getElementById(
+        "formReview"
+      );
+
+    if (formulario) {
+
+      formulario.addEventListener(
+        "submit",
+        cadastrarReview
+      );
+    }
+
+
+    // ======================================
+    // BUSCA
+    // ======================================
+
+    const searchInput =
+      document.getElementById(
+        "searchInput"
+      );
+
+    if (searchInput) {
+
+      searchInput.addEventListener(
+        "input",
+        () => {
+
+          const termo =
+            searchInput
+              .value
               .toLowerCase();
 
-          if (
-            conteudo.includes(termo)
-          ) {
+          const cards =
+            document.querySelectorAll(
+              "[data-search]"
+            );
 
-            card.style.display = "";
+          cards.forEach(
+            (card) => {
 
-          } else {
+              const conteudo =
+                card
+                  .getAttribute(
+                    "data-search"
+                  )
+                  .toLowerCase();
 
-            card.style.display =
-              "none";
+              if (
+                conteudo.includes(
+                  termo
+                )
+              ) {
 
-          }
+                card.style.display =
+                  "";
 
-        });
+              } else {
 
-      }
-    );
+                card.style.display =
+                  "none";
+              }
+            }
+          );
+        }
+      );
+    }
 
+
+    carregarReviews();
   }
-
-
-  carregarReviews();
-
-});
-
+);
 
 
 // ==========================================
@@ -178,22 +217,21 @@ async function carregarReviews() {
     const reviews =
       await resposta.json();
 
-
     const lista =
       document.getElementById(
         "reviewsBanco"
       );
 
-
     if (!lista) {
       return;
     }
 
-
     lista.innerHTML = "";
 
-
-    if (reviews.length === 0) {
+    if (
+      !Array.isArray(reviews) ||
+      reviews.length === 0
+    ) {
 
       lista.innerHTML = `
         <p class="text-zinc-400">
@@ -205,85 +243,109 @@ async function carregarReviews() {
     }
 
 
-    reviews.forEach((review) => {
+    reviews.forEach(
+      (review) => {
 
-      const card =
-        document.createElement(
-          "article"
+        const card =
+          document.createElement(
+            "article"
+          );
+
+        card.className =
+          "overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 transition hover:-translate-y-1 hover:border-red-800";
+
+        card.setAttribute(
+          "data-search",
+          `${review.titulo} ${review.categoria} ${review.ano}`
         );
 
 
-      card.className =
-        "flex h-full flex-col rounded-xl border border-zinc-800 bg-zinc-950 p-5 transition hover:-translate-y-1 hover:border-red-800";
+        card.innerHTML = `
 
-
-      card.innerHTML = `
-
-        <span
-          class="text-xs font-black uppercase text-red-600"
-        >
-          ${review.categoria}
-        </span>
-
-
-        <h3
-          class="mt-3 text-xl font-black text-white"
-        >
-          ${review.titulo}
-        </h3>
-
-
-        <p
-          class="mt-1 text-lg font-black text-red-600"
-        >
-          ★ ${review.nota}/10
-        </p>
-
-
-        <p
-          class="mt-2 text-sm text-zinc-400"
-        >
-          Ano: ${review.ano}
-        </p>
-
-
-        <p
-          class="mt-3 text-sm leading-6 text-zinc-400"
-        >
           ${
-            review.descricao ||
-            "Sem descrição."
+            review.imagem
+              ? `
+                <div class="h-64 w-full overflow-hidden bg-zinc-900">
+                  <img
+                    src="${review.imagem}"
+                    alt="${review.titulo}"
+                    class="h-full w-full object-cover"
+                    onerror="this.parentElement.style.display='none'"
+                  >
+                </div>
+              `
+              : ""
           }
-        </p>
+
+          <div class="flex h-full flex-col p-5">
+
+            <span
+              class="text-xs font-black uppercase text-red-600"
+            >
+              ${review.categoria}
+            </span>
 
 
-        <div class="mt-5 flex gap-3">
+            <h3
+              class="mt-3 text-xl font-black text-white"
+            >
+              ${review.titulo}
+            </h3>
 
 
-          <button
-            onclick="editarReview(${review.id})"
-            class="flex-1 rounded-lg border border-zinc-700 px-4 py-2 font-bold text-white transition hover:border-red-600"
-          >
-            Editar
-          </button>
+            <p
+              class="mt-1 text-lg font-black text-red-600"
+            >
+              ★ ${review.nota}/10
+            </p>
 
 
-          <button
-            onclick="excluirReview(${review.id})"
-            class="flex-1 rounded-lg bg-red-600 px-4 py-2 font-bold text-white transition hover:bg-red-500"
-          >
-            Excluir
-          </button>
+            <p
+              class="mt-2 text-sm text-zinc-400"
+            >
+              Ano: ${review.ano}
+            </p>
 
 
-        </div>
-      `;
+            <p
+              class="mt-3 text-sm leading-6 text-zinc-400"
+            >
+              ${
+                review.descricao ||
+                "Sem descrição."
+              }
+            </p>
 
 
-      lista.appendChild(card);
+            <div
+              class="mt-5 flex gap-3"
+            >
 
-    });
+              <button
+                onclick="editarReview(${review.id})"
+                class="flex-1 rounded-lg border border-zinc-700 px-4 py-2 font-bold text-white transition hover:border-red-600"
+              >
+                Editar
+              </button>
 
+
+              <button
+                onclick="excluirReview(${review.id})"
+                class="flex-1 rounded-lg bg-red-600 px-4 py-2 font-bold text-white transition hover:bg-red-500"
+              >
+                Excluir
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+        lista.appendChild(
+          card
+        );
+      }
+    );
 
   } catch (erro) {
 
@@ -291,18 +353,17 @@ async function carregarReviews() {
       "Erro ao carregar reviews:",
       erro
     );
-
   }
-
 }
-
 
 
 // ==========================================
 // CADASTRAR REVIEW
 // ==========================================
 
-async function cadastrarReview(evento) {
+async function cadastrarReview(
+  evento
+) {
 
   evento.preventDefault();
 
@@ -337,18 +398,27 @@ async function cadastrarReview(evento) {
     ).value;
 
 
+  const imagem =
+    document.getElementById(
+      "imagemReview"
+    ).value.trim();
+
+
   const review = {
 
     titulo,
 
     categoria,
 
-    ano: Number(ano),
+    ano:
+      Number(ano),
 
-    nota: Number(nota),
+    nota:
+      Number(nota),
 
-    descricao
+    descricao,
 
+    imagem
   };
 
 
@@ -359,7 +429,8 @@ async function cadastrarReview(evento) {
         `${API_URL}/reviews`,
         {
 
-          method: "POST",
+          method:
+            "POST",
 
           headers: {
 
@@ -368,12 +439,12 @@ async function cadastrarReview(evento) {
 
             "Authorization":
               `Bearer ${token}`
-
           },
 
           body:
-            JSON.stringify(review)
-
+            JSON.stringify(
+              review
+            )
         }
       );
 
@@ -382,7 +453,9 @@ async function cadastrarReview(evento) {
       await resposta.json();
 
 
-    if (resposta.status === 401) {
+    if (
+      resposta.status === 401
+    ) {
 
       alert(
         "Seu login expirou. Faça login novamente."
@@ -400,7 +473,6 @@ async function cadastrarReview(evento) {
         "login.html";
 
       return;
-
     }
 
 
@@ -412,7 +484,6 @@ async function cadastrarReview(evento) {
       );
 
       return;
-
     }
 
 
@@ -438,22 +509,20 @@ async function cadastrarReview(evento) {
       erro
     );
 
-
     alert(
       "Não foi possível cadastrar a review."
     );
-
   }
-
 }
-
 
 
 // ==========================================
 // EXCLUIR REVIEW
 // ==========================================
 
-async function excluirReview(id) {
+async function excluirReview(
+  id
+) {
 
   const confirmar =
     confirm(
@@ -473,200 +542,20 @@ async function excluirReview(id) {
         `${API_URL}/reviews/${id}`,
         {
 
-          method: "DELETE",
+          method:
+            "DELETE",
 
           headers: {
 
             "Authorization":
               `Bearer ${token}`
-
           }
-
-        }
-      );
-
-
-    if (resposta.status === 401) {
-
-      alert(
-        "Seu login expirou. Faça login novamente."
-      );
-
-      localStorage.removeItem(
-        "token"
-      );
-
-      localStorage.removeItem(
-        "usuario"
-      );
-
-      window.location.href =
-        "login.html";
-
-      return;
-
-    }
-
-
-    if (!resposta.ok) {
-
-      alert(
-        "Erro ao excluir a review."
-      );
-
-      return;
-
-    }
-
-
-    alert(
-      "Review excluída com sucesso!"
-    );
-
-
-    carregarReviews();
-
-
-  } catch (erro) {
-
-    console.error(erro);
-
-
-    alert(
-      "Não foi possível excluir a review."
-    );
-
-  }
-
-}
-
-
-
-// ==========================================
-// EDITAR REVIEW
-// ==========================================
-
-async function editarReview(id) {
-
-  try {
-
-    const resposta =
-      await fetch(
-        `${API_URL}/reviews`
-      );
-
-
-    const reviews =
-      await resposta.json();
-
-
-    const review =
-      reviews.find(
-        (r) => r.id === id
-      );
-
-
-    if (!review) {
-      return;
-    }
-
-
-    const titulo =
-      prompt(
-        "Título:",
-        review.titulo
-      );
-
-
-    if (titulo === null) {
-      return;
-    }
-
-
-    const categoria =
-      prompt(
-        "Categoria:",
-        review.categoria
-      );
-
-
-    if (categoria === null) {
-      return;
-    }
-
-
-    const ano =
-      prompt(
-        "Ano:",
-        review.ano
-      );
-
-
-    if (ano === null) {
-      return;
-    }
-
-
-    const nota =
-      prompt(
-        "Nota:",
-        review.nota
-      );
-
-
-    if (nota === null) {
-      return;
-    }
-
-
-    const descricao =
-      prompt(
-        "Descrição:",
-        review.descricao || ""
-      );
-
-const imagem =
-  document.getElementById("imagem").value;
-
-
-
-
-    if (descricao === null) {
-      return;
-    }
-
-
-    const respostaEdicao =
-      await fetch(
-        `${API_URL}/reviews/${id}`,
-        {
-
-          method: "PUT",
-
-          headers: {
-
-            "Content-Type":
-              "application/json",
-
-            "Authorization":
-              `Bearer ${token}`
-
-          },
-
-          body: JSON.stringify({
-  titulo,
-  categoria,
-  ano,
-  nota,
-  descricao,
-  imagem
-})
         }
       );
 
 
     if (
-      respostaEdicao.status === 401
+      resposta.status === 401
     ) {
 
       alert(
@@ -685,18 +574,232 @@ const imagem =
         "login.html";
 
       return;
-
     }
 
 
-    if (!respostaEdicao.ok) {
+    if (!resposta.ok) {
+
+      alert(
+        "Erro ao excluir a review."
+      );
+
+      return;
+    }
+
+
+    alert(
+      "Review excluída com sucesso!"
+    );
+
+
+    carregarReviews();
+
+
+  } catch (erro) {
+
+    console.error(
+      erro
+    );
+
+
+    alert(
+      "Não foi possível excluir a review."
+    );
+  }
+}
+
+
+// ==========================================
+// EDITAR REVIEW
+// ==========================================
+
+async function editarReview(
+  id
+) {
+
+  try {
+
+    const resposta =
+      await fetch(
+        `${API_URL}/reviews`
+      );
+
+
+    const reviews =
+      await resposta.json();
+
+
+    const review =
+      reviews.find(
+        (r) =>
+          Number(r.id) ===
+          Number(id)
+      );
+
+
+    if (!review) {
+      return;
+    }
+
+
+    const titulo =
+      prompt(
+        "Título:",
+        review.titulo
+      );
+
+
+    if (
+      titulo === null
+    ) {
+      return;
+    }
+
+
+    const categoria =
+      prompt(
+        "Categoria:",
+        review.categoria
+      );
+
+
+    if (
+      categoria === null
+    ) {
+      return;
+    }
+
+
+    const ano =
+      prompt(
+        "Ano:",
+        review.ano
+      );
+
+
+    if (
+      ano === null
+    ) {
+      return;
+    }
+
+
+    const nota =
+      prompt(
+        "Nota:",
+        review.nota
+      );
+
+
+    if (
+      nota === null
+    ) {
+      return;
+    }
+
+
+    const descricao =
+      prompt(
+        "Descrição:",
+        review.descricao ||
+        ""
+      );
+
+
+    if (
+      descricao === null
+    ) {
+      return;
+    }
+
+
+    const imagem =
+      prompt(
+        "URL da imagem:",
+        review.imagem ||
+        ""
+      );
+
+
+    if (
+      imagem === null
+    ) {
+      return;
+    }
+
+
+    const respostaEdicao =
+      await fetch(
+        `${API_URL}/reviews/${id}`,
+        {
+
+          method:
+            "PUT",
+
+          headers: {
+
+            "Content-Type":
+              "application/json",
+
+            "Authorization":
+              `Bearer ${token}`
+          },
+
+          body:
+            JSON.stringify({
+
+              titulo,
+
+              categoria,
+
+              ano:
+                Number(ano),
+
+              nota:
+                Number(nota),
+
+              descricao,
+
+              imagem:
+                imagem.trim()
+            })
+        }
+      );
+
+
+    if (
+      respostaEdicao.status ===
+      401
+    ) {
+
+      alert(
+        "Seu login expirou. Faça login novamente."
+      );
+
+      localStorage.removeItem(
+        "token"
+      );
+
+      localStorage.removeItem(
+        "usuario"
+      );
+
+      window.location.href =
+        "login.html";
+
+      return;
+    }
+
+
+    if (
+      !respostaEdicao.ok
+    ) {
 
       alert(
         "Erro ao editar a review."
       );
 
       return;
-
     }
 
 
@@ -710,13 +813,13 @@ const imagem =
 
   } catch (erro) {
 
-    console.error(erro);
+    console.error(
+      erro
+    );
 
 
     alert(
       "Não foi possível editar a review."
     );
-
   }
-
 }
