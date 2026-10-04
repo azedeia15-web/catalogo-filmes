@@ -68,15 +68,84 @@
           class="w-full rounded-lg border border-zinc-700 bg-black p-3">
 
         <select
-          required
-          class="w-full rounded-lg border border-zinc-700 bg-black p-3">
+  id="formaPagamento"
+  required
+  class="w-full rounded-lg border border-zinc-700 bg-black p-3">
 
-          <option value="">Forma de pagamento</option>
-          <option>Pix</option>
-          <option>Cartão de crédito</option>
-          <option>Boleto</option>
+  <option value="">Forma de pagamento</option>
+  <option value="pix">Pix</option>
+  <option value="cartao">Cartão de crédito</option>
+  <option value="boleto">Boleto</option>
 
-        </select>
+</select>
+
+
+<div
+  id="pagamentoPix"
+  class="hidden rounded-xl border border-zinc-800 bg-black p-4">
+
+  <p class="font-black text-green-500">
+    ◆ Pagamento via Pix
+  </p>
+
+  <p class="mt-2 text-sm text-zinc-400">
+    Após finalizar o pedido, um código Pix demonstrativo seria gerado.
+  </p>
+
+</div>
+
+
+<div
+  id="pagamentoCartao"
+  class="hidden space-y-3 rounded-xl border border-zinc-800 bg-black p-4">
+
+  <p class="font-black text-red-500">
+    💳 Dados do cartão
+  </p>
+
+  <input
+    type="text"
+    placeholder="Número do cartão"
+    maxlength="19"
+    class="w-full rounded-lg border border-zinc-700 bg-zinc-950 p-3">
+
+  <input
+    type="text"
+    placeholder="Nome impresso no cartão"
+    class="w-full rounded-lg border border-zinc-700 bg-zinc-950 p-3">
+
+  <div class="grid grid-cols-2 gap-3">
+
+    <input
+      type="text"
+      placeholder="MM/AA"
+      maxlength="5"
+      class="w-full rounded-lg border border-zinc-700 bg-zinc-950 p-3">
+
+    <input
+      type="text"
+      placeholder="CVV"
+      maxlength="3"
+      class="w-full rounded-lg border border-zinc-700 bg-zinc-950 p-3">
+
+  </div>
+
+</div>
+
+
+<div
+  id="pagamentoBoleto"
+  class="hidden rounded-xl border border-zinc-800 bg-black p-4">
+
+  <p class="font-black text-yellow-500">
+    🧾 Pagamento via boleto
+  </p>
+
+  <p class="mt-2 text-sm text-zinc-400">
+    Um boleto demonstrativo seria gerado após a confirmação do pedido.
+  </p>
+
+</div>
 
         <button
           type="submit"
@@ -205,6 +274,50 @@
       total.toFixed(2).replace(".", ",");
 
 
+
+
+
+
+
+const formaPagamento =
+  document.getElementById("formaPagamento");
+
+const pagamentoPix =
+  document.getElementById("pagamentoPix");
+
+const pagamentoCartao =
+  document.getElementById("pagamentoCartao");
+
+const pagamentoBoleto =
+  document.getElementById("pagamentoBoleto");
+
+
+formaPagamento.addEventListener("change", function() {
+
+  pagamentoPix.classList.add("hidden");
+  pagamentoCartao.classList.add("hidden");
+  pagamentoBoleto.classList.add("hidden");
+
+  if (this.value === "pix") {
+    pagamentoPix.classList.remove("hidden");
+  }
+
+  if (this.value === "cartao") {
+    pagamentoCartao.classList.remove("hidden");
+  }
+
+  if (this.value === "boleto") {
+    pagamentoBoleto.classList.remove("hidden");
+  }
+
+});
+
+
+
+
+
+
+
    document
   .getElementById("formCheckout")
   .addEventListener("submit", function(evento) {
@@ -220,7 +333,7 @@
 
     window.location.href = "pedido-confirmado.html";
 
-  });
+  });   
 
   </script>
 
