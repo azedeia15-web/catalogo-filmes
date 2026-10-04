@@ -4,7 +4,7 @@ if (!token) {
   window.location.href = "login.html";
 }
 
-const API_URL = "http://localhost:3000";
+const API_URL = "https://catalogo-filmes-backend-kbk8.onrender.com";
 
 const usuario = JSON.parse(
   localStorage.getItem("usuario")
