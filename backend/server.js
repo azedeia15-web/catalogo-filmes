@@ -17,7 +17,7 @@ app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument)
-);
+);  
 
 // ================= CONFIGURAÇÕES =================
 
@@ -28,11 +28,14 @@ app.use(express.json());
 // ================= BANCO DE DADOS =================
 
 const pool = new Pool({
-  user: "postgres",
-  host: "db",
-  database: "catalogo",
-  password: "1234",
-  port: 5432
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT || 5432,
+  ssl: process.env.NODE_ENV === "production"
+    ? { rejectUnauthorized: false }
+    : false
 });
 
 
@@ -542,6 +545,8 @@ app.get("/minha-assinatura", autenticarToken, async (req, res) => {
 
 
 
-app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
