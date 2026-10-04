@@ -341,58 +341,69 @@
 
     <form id="formReview" class="space-y-4">
 
-      <input
-        id="tituloReview"
-        type="text"
-        placeholder="Título"
-        required
-        class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:border-red-600"
-      >
+  <input
+    id="tituloReview"
+    type="text"
+    placeholder="Título"
+    required
+    class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:border-red-600"
+  >
 
-      <select
-        id="categoriaReview"
-        required
-        class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white"
-      >
-        <option value="">Selecione a categoria</option>
-        <option value="filme">Filme</option>
-        <option value="serie">Série</option>
-        <option value="jogo">Jogo</option>
-      </select>
+  <select
+    id="categoriaReview"
+    required
+    class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:border-red-600"
+  >
+    <option value="">Selecione a categoria</option>
+    <option value="filme">Filme</option>
+    <option value="serie">Série</option>
+    <option value="jogo">Jogo</option>
+  </select>
 
-      <input
-        id="anoReview"
-        type="number"
-        placeholder="Ano"
-        required
-        class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white"
-      >
+  <input
+    id="anoReview"
+    type="number"
+    placeholder="Ano"
+    required
+    class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:border-red-600"
+  >
 
-      <input
-        id="notaReview"
-        type="number"
-        step="0.1"
-        min="0"
-        max="10"
-        placeholder="Nota de 0 a 10"
-        required
-        class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white"
-      >
+  <input
+    id="notaReview"
+    type="number"
+    step="0.1"
+    min="0"
+    max="10"
+    placeholder="Nota de 0 a 10"
+    required
+    class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:border-red-600"
+  >
 
-      <textarea
-        id="descricaoReview"
-        placeholder="Descrição da review"
-        class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white"
-      ></textarea>
+  <textarea
+    id="descricaoReview"
+    placeholder="Descrição da review"
+    class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:border-red-600"
+  ></textarea>
 
-      <button
-        type="submit"
-        class="w-full rounded-lg bg-red-600 p-3 font-black text-white transition hover:bg-red-500"
-      >
-        CADASTRAR REVIEW
-      </button>
+  <input
+    id="imagemReview"
+    type="url"
+    placeholder="URL da imagem (ex: https://site.com/capa.jpg)"
+    class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:border-red-600"
+  >
 
-    </form>
+  <p class="text-xs text-zinc-500">
+    Cole o endereço direto da capa do filme, série ou jogo.
+  </p>
+
+  <button
+    type="submit"
+    class="w-full rounded-lg bg-red-600 p-3 font-black text-white transition hover:bg-red-500"
+  >
+    CADASTRAR REVIEW
+  </button>
+
+</form>
 
   </div>
 

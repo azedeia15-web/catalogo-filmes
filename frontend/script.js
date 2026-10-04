@@ -625,6 +625,11 @@ async function editarReview(id) {
         review.descricao || ""
       );
 
+const imagem =
+  document.getElementById("imagem").value;
+
+
+
 
     if (descricao === null) {
       return;
@@ -648,23 +653,14 @@ async function editarReview(id) {
 
           },
 
-          body:
-            JSON.stringify({
-
-              titulo,
-
-              categoria,
-
-              ano:
-                Number(ano),
-
-              nota:
-                Number(nota),
-
-              descricao
-
-            })
-
+          body: JSON.stringify({
+  titulo,
+  categoria,
+  ano,
+  nota,
+  descricao,
+  imagem
+})
         }
       );
 
