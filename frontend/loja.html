@@ -164,7 +164,8 @@
     font-size: 13px;
     letter-spacing: 1px;
     white-space: nowrap;
-    position: relative;
+    position: sticky;
+    top: 86px;
     z-index: 40;
   }
 
@@ -817,11 +818,11 @@
   <!-- ================= CARRINHO ================= -->
 
   <div
-    id="carrinhoPainel"
-    class="fixed inset-0 z-[100] bg-black/80">
+  id="carrinhoPainel"
+  style="display: none;"
+  class="fixed inset-0 z-[100] bg-black/80">
 
-    <div
-      class="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-red-900 bg-zinc-950 p-7">
+    <div class="fixed right-0 top-0 h-screen w-full max-w-md overflow-y-auto border-l border-red-900 bg-zinc-950 p-7">
 
       <div class="flex items-center justify-between">
 
