@@ -133,6 +133,27 @@
       </div>
 
 
+
+
+
+
+<div class="flex items-center gap-2">
+  <span
+    id="nomeUsuarioLoja"
+    class="whitespace-nowrap text-sm font-bold text-zinc-300">
+  </span>
+
+  <span
+    id="planoUsuarioLoja"
+    class="hidden whitespace-nowrap rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white">
+  </span>
+</div>
+
+
+
+
+
+
       <button
         onclick="abrirCarrinho()"
         class="relative whitespace-nowrap rounded-full border border-red-600 px-5 py-2 font-black transition hover:bg-red-600">
@@ -1085,6 +1106,8 @@
 
   <!-- ================= JAVASCRIPT ================= -->
 
+  
+
   <script>
 
   let carrinho =
@@ -1421,6 +1444,58 @@
 
 
   atualizarCarrinho();
+
+
+
+
+
+
+const tokenLoja = localStorage.getItem("token");
+const usuarioLoja = JSON.parse(localStorage.getItem("usuario"));
+
+const nomeUsuarioLoja =
+  document.getElementById("nomeUsuarioLoja");
+
+const planoUsuarioLoja =
+  document.getElementById("planoUsuarioLoja");
+
+if (tokenLoja && usuarioLoja) {
+
+  nomeUsuarioLoja.textContent =
+    `Olá, ${usuarioLoja.nome}`;
+
+  fetch(
+    "https://catalogo-filmes-backend-kbk8.onrender.com/minha-assinatura",
+    {
+      headers: {
+        Authorization: `Bearer ${tokenLoja}`
+      }
+    }
+  )
+  .then(resposta => resposta.json())
+  .then(dados => {
+
+    if (dados.membro && dados.assinatura) {
+
+      planoUsuarioLoja.textContent =
+        `★ ${dados.assinatura.plano}`;
+
+      planoUsuarioLoja.classList.remove("hidden");
+    }
+
+  })
+  .catch(erro => {
+    console.error("Erro ao verificar plano:", erro);
+  });
+
+}
+
+
+
+
+
+
+
 
 </script>
 
