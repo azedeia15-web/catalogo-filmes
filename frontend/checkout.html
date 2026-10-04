@@ -205,26 +205,22 @@
       total.toFixed(2).replace(".", ",");
 
 
-    document
-      .getElementById("formCheckout")
-      .addEventListener("submit", function(evento) {
+   document
+  .getElementById("formCheckout")
+  .addEventListener("submit", function(evento) {
 
-        evento.preventDefault();
+    evento.preventDefault();
 
-        if (carrinho.length === 0) {
-          alert("Seu carrinho está vazio.");
-          return;
-        }
+    if (carrinho.length === 0) {
+      alert("Seu carrinho está vazio.");
+      return;
+    }
 
-        alert(
-          "Pedido realizado com sucesso! Esta é uma compra demonstrativa."
-        );
+    localStorage.removeItem("carrinhoTrasheira");
 
-        localStorage.removeItem("carrinhoTrasheira");
+    window.location.href = "pedido-confirmado.html";
 
-        window.location.href = "pedido-confirmado.html";
-
-      });
+  });
 
   </script>
 
