@@ -9,6 +9,8 @@ const path = require("path");
 
 const app = express();
 
+// ================= SWAGGER =================
+
 const swaggerDocument = YAML.load(
   path.join(__dirname, "openapi.yaml")
 );
@@ -17,13 +19,12 @@ app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument)
-);  
+);
 
 // ================= CONFIGURAÇÕES =================
 
 app.use(cors());
 app.use(express.json());
-
 
 // ================= BANCO DE DADOS =================
 
@@ -33,10 +34,13 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT || 5432,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : false
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false
 });
+
+// ================= CRIAR TABELAS =================
 
 async function criarTabelas() {
   try {
@@ -75,21 +79,10 @@ async function criarTabelas() {
 
 criarTabelas();
 
+// ================= TOKEN =================
 
-
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT || 5432,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : false
-});
-
-
-// Chave usada para criar o token de login
-const JWT_SECRET = "trasheira-violenta-chave-secreta";
+const JWT_SECRET =
+  process.env.JWT_SECRET || "trasheira-violenta-chave-secreta";
 
 function autenticarToken(req, res, next) {
   const authorization = req.headers.authorization;
@@ -108,7 +101,6 @@ function autenticarToken(req, res, next) {
     req.usuario = usuario;
 
     next();
-
   } catch (erro) {
     return res.status(401).json({
       erro: "Login inválido ou expirado."
@@ -122,9 +114,8 @@ app.get("/", (req, res) => {
   res.send("Backend funcionando!");
 });
 
-
 // ==================================================
-// CADASTRO DE USUÁRIO
+// CADASTRO
 // ==================================================
 
 app.post("/cadastro", async (req, res) => {
@@ -146,11 +137,30 @@ app.post("/cadastro", async (req, res) => {
       });
     }
 
-    // Verifica se o e-mail já existe
     const usuarioExistente = await pool.query(
       "SELECT id FROM usuarios WHERE email = $1",
       [email]
-   
+    );
+
+    if (usuarioExistente.rows.length > 0) {
+      return res.status(400).json({
+        erro: "Este e-mail já está cadastrado."
+      });
+    }
+
+    const senhaCriptografada = await bcrypt.hash(
+      senha,
+      10
+    );
+
+    const resultado = await pool.query(
+      `
+      INSERT INTO usuarios
+      (nome, email, senha)
+      VALUES ($1, $2, $3)
+      RETURNING id, nome, email
+      `,
+      [
         nome,
         email,
         senhaCriptografada
@@ -171,7 +181,6 @@ app.post("/cadastro", async (req, res) => {
   }
 });
 
-
 // ==================================================
 // LOGIN
 // ==================================================
@@ -188,7 +197,6 @@ app.post("/login", async (req, res) => {
 
     email = email.trim().toLowerCase();
 
-    // Procura usuário pelo e-mail
     const resultado = await pool.query(
       "SELECT * FROM usuarios WHERE email = $1",
       [email]
@@ -202,7 +210,6 @@ app.post("/login", async (req, res) => {
 
     const usuario = resultado.rows[0];
 
-    // Compara a senha digitada com a senha criptografada
     const senhaCorreta = await bcrypt.compare(
       senha,
       usuario.senha
@@ -214,7 +221,6 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    // Cria token
     const token = jwt.sign(
       {
         id: usuario.id,
@@ -246,7 +252,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
 // ==================================================
 // LISTAR REVIEWS
 // ==================================================
@@ -267,7 +272,6 @@ app.get("/reviews", async (req, res) => {
     });
   }
 });
-
 
 // ==================================================
 // CADASTRAR REVIEW
@@ -290,10 +294,12 @@ app.post("/reviews", autenticarToken, async (req, res) => {
     }
 
     const resultado = await pool.query(
-      `INSERT INTO reviews
-       (titulo, categoria, ano, nota, descricao)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING *`,
+      `
+      INSERT INTO reviews
+      (titulo, categoria, ano, nota, descricao)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *
+      `,
       [
         titulo,
         categoria,
@@ -314,12 +320,12 @@ app.post("/reviews", autenticarToken, async (req, res) => {
   }
 });
 
-
 // ==================================================
 // EDITAR REVIEW
 // ==================================================
 
-app.put("/reviews/:id", autenticarToken, async (req, res) => {  try {
+app.put("/reviews/:id", autenticarToken, async (req, res) => {
+  try {
     const { id } = req.params;
 
     const {
@@ -331,14 +337,16 @@ app.put("/reviews/:id", autenticarToken, async (req, res) => {  try {
     } = req.body;
 
     const resultado = await pool.query(
-      `UPDATE reviews
-       SET titulo = $1,
-           categoria = $2,
-           ano = $3,
-           nota = $4,
-           descricao = $5
-       WHERE id = $6
-       RETURNING *`,
+      `
+      UPDATE reviews
+      SET titulo = $1,
+          categoria = $2,
+          ano = $3,
+          nota = $4,
+          descricao = $5
+      WHERE id = $6
+      RETURNING *
+      `,
       [
         titulo,
         categoria,
@@ -369,18 +377,20 @@ app.put("/reviews/:id", autenticarToken, async (req, res) => {  try {
   }
 });
 
-
 // ==================================================
 // EXCLUIR REVIEW
 // ==================================================
 
-app.delete("/reviews/:id", autenticarToken, async (req, res) => {  try {
+app.delete("/reviews/:id", autenticarToken, async (req, res) => {
+  try {
     const { id } = req.params;
 
     const resultado = await pool.query(
-      `DELETE FROM reviews
-       WHERE id = $1
-       RETURNING *`,
+      `
+      DELETE FROM reviews
+      WHERE id = $1
+      RETURNING *
+      `,
       [id]
     );
 
@@ -403,50 +413,18 @@ app.delete("/reviews/:id", autenticarToken, async (req, res) => {  try {
   }
 });
 
-
-// ==================================================
-// SERVIDOR
-// ==================================================
-
-
 // ==================================================
 // ASSINATURA / SEJA MEMBRO
 // ==================================================
 
-app.post("/assinaturas", async (req, res) => {
+app.post("/assinaturas", autenticarToken, async (req, res) => {
   try {
-
-    // Pega o token enviado pelo navegador
-    const authorization = req.headers.authorization;
-
-    if (!authorization) {
-      return res.status(401).json({
-        erro: "Você precisa estar logado."
-      });
-    }
-
-    const token = authorization.split(" ")[1];
-
-    let usuario;
-
-    try {
-      usuario = jwt.verify(token, JWT_SECRET);
-    } catch (erro) {
-      return res.status(401).json({
-        erro: "Login inválido ou expirado."
-      });
-    }
-
-
     const { plano } = req.body;
 
-
-    // Valores definidos pelo próprio servidor
     const planos = {
       "Básico": 9.90,
       "Premium": 19.90
     };
-
 
     if (!planos[plano]) {
       return res.status(400).json({
@@ -454,37 +432,34 @@ app.post("/assinaturas", async (req, res) => {
       });
     }
 
-
     const valor = planos[plano];
 
-
-    // Verifica se o usuário já possui assinatura ativa
     const assinaturaExistente = await pool.query(
-      `SELECT * FROM assinaturas
-       WHERE usuario_id = $1
-       AND status = 'ativo'`,
-      [usuario.id]
+      `
+      SELECT * FROM assinaturas
+      WHERE usuario_id = $1
+      AND status = 'ativo'
+      `,
+      [req.usuario.id]
     );
 
-
-    // Se já for membro, atualiza o plano
     if (assinaturaExistente.rows.length > 0) {
-
       const resultado = await pool.query(
-        `UPDATE assinaturas
-         SET plano = $1,
-             valor = $2,
-             data_inicio = CURRENT_TIMESTAMP
-         WHERE usuario_id = $3
-         AND status = 'ativo'
-         RETURNING *`,
+        `
+        UPDATE assinaturas
+        SET plano = $1,
+            valor = $2,
+            data_inicio = CURRENT_TIMESTAMP
+        WHERE usuario_id = $3
+        AND status = 'ativo'
+        RETURNING *
+        `,
         [
           plano,
           valor,
-          usuario.id
+          req.usuario.id
         ]
       );
-
 
       return res.json({
         mensagem: "Assinatura atualizada com sucesso!",
@@ -492,34 +467,30 @@ app.post("/assinaturas", async (req, res) => {
       });
     }
 
-
-    // Se ainda não for membro, cria assinatura
     const resultado = await pool.query(
-      `INSERT INTO assinaturas
-       (usuario_id, plano, valor, status)
-       VALUES ($1, $2, $3, 'ativo')
-       RETURNING *`,
+      `
+      INSERT INTO assinaturas
+      (usuario_id, plano, valor, status)
+      VALUES ($1, $2, $3, 'ativo')
+      RETURNING *
+      `,
       [
-        usuario.id,
+        req.usuario.id,
         plano,
         valor
       ]
     );
-
 
     res.status(201).json({
       mensagem: "Assinatura realizada com sucesso!",
       assinatura: resultado.rows[0]
     });
 
-
   } catch (erro) {
-
     console.error(
       "Erro ao realizar assinatura:",
       erro
     );
-
 
     res.status(500).json({
       erro: "Erro ao realizar assinatura."
@@ -527,52 +498,52 @@ app.post("/assinaturas", async (req, res) => {
   }
 });
 
-
-
 // ==================================================
-// VER ASSINATURA DO USUÁRIO
+// VER ASSINATURA
 // ==================================================
 
-app.get("/minha-assinatura", autenticarToken, async (req, res) => {
-  try {
+app.get(
+  "/minha-assinatura",
+  autenticarToken,
+  async (req, res) => {
+    try {
+      const resultado = await pool.query(
+        `
+        SELECT *
+        FROM assinaturas
+        WHERE usuario_id = $1
+        AND status = 'ativo'
+        ORDER BY id DESC
+        LIMIT 1
+        `,
+        [req.usuario.id]
+      );
 
-    const resultado = await pool.query(
-      `SELECT *
-       FROM assinaturas
-       WHERE usuario_id = $1
-       AND status = 'ativo'
-       ORDER BY id DESC
-       LIMIT 1`,
-      [req.usuario.id]
-    );
+      if (resultado.rows.length === 0) {
+        return res.json({
+          membro: false
+        });
+      }
 
-    if (resultado.rows.length === 0) {
-      return res.json({
-        membro: false
+      res.json({
+        membro: true,
+        assinatura: resultado.rows[0]
+      });
+
+    } catch (erro) {
+      console.error(
+        "Erro ao verificar assinatura:",
+        erro
+      );
+
+      res.status(500).json({
+        erro: "Erro ao verificar assinatura."
       });
     }
-
-    res.json({
-      membro: true,
-      assinatura: resultado.rows[0]
-    });
-
-  } catch (erro) {
-
-    console.error(
-      "Erro ao verificar assinatura:",
-      erro
-    );
-
-    res.status(500).json({
-      erro: "Erro ao verificar assinatura."
-    });
   }
-});
+);
 
-
-
-
+// ================= SERVIDOR =================
 
 const PORT = process.env.PORT || 3000;
 
