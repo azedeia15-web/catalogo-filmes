@@ -153,9 +153,7 @@
 
       </button>
 
-    </div>
-
-  <<style>
+    <style>
   .promo-loja {
     width: 100%;
     overflow: hidden;
@@ -176,6 +174,10 @@
     animation: moverPromocao 28s linear infinite;
   }
 
+  .promo-loja:hover .promo-loja-texto {
+    animation-play-state: paused;
+  }
+
   @keyframes moverPromocao {
     0% {
       transform: translateX(0);
@@ -185,14 +187,6 @@
       transform: translateX(-100%);
     }
   }
-
-.promo-loja:hover .promo-loja-texto {
-  animation-play-state: paused;
-}
-
-
-
-
 </style>
 
 <div class="promo-loja">
