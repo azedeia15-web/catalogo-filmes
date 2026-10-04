@@ -1,129 +1,142 @@
 const tokenUsuario = localStorage.getItem("token");
 const dadosUsuario = localStorage.getItem("usuario");
 
+const API_URL =
+  "https://catalogo-filmes-backend-kbk8.onrender.com";
+
 if (!tokenUsuario) {
   window.location.href = "login.html";
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
 
-  const nomeUsuario =
-    document.getElementById("nomeUsuario");
+    const nomeUsuario =
+      document.getElementById("nomeUsuario");
 
-  const btnSair =
-    document.getElementById("btnSair");
-
-
-  // =========================
-  // MOSTRAR NOME
-  // =========================
-
-  if (dadosUsuario && nomeUsuario) {
-
-    const usuario =
-      JSON.parse(dadosUsuario);
-
-    nomeUsuario.textContent =
-      `Olá, ${usuario.nome}`;
-  }
+    const btnSair =
+      document.getElementById("btnSair");
 
 
-  // =========================
-  // VERIFICAR ASSINATURA
-  // =========================
+    // =========================
+    // MOSTRAR NOME
+    // =========================
 
-  try {
+    if (dadosUsuario && nomeUsuario) {
 
-    const resposta = await fetch(
-      "http://localhost:3000/minha-assinatura",
-      {
-        headers: {
-          Authorization:
-            `Bearer ${tokenUsuario}`
+      const usuario =
+        JSON.parse(dadosUsuario);
+
+      nomeUsuario.textContent =
+        `Olá, ${usuario.nome}`;
+    }
+
+
+    // =========================
+    // VERIFICAR ASSINATURA
+    // =========================
+
+    try {
+
+      const resposta = await fetch(
+        `${API_URL}/minha-assinatura`,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${tokenUsuario}`
+          }
         }
-      }
-    );
+      );
 
 
-    if (resposta.ok) {
+      if (resposta.ok) {
 
-      const resultado =
-        await resposta.json();
+        const resultado =
+          await resposta.json();
 
 
-      if (
-        resultado.membro &&
-        nomeUsuario
-      ) {
-
-        // Evita criar dois badges
         if (
-          !document.getElementById(
-            "badgeMembro"
-          )
+          resultado.membro &&
+          nomeUsuario
         ) {
 
-          const badge =
-            document.createElement("span");
+          // Evita criar dois badges
+          if (
+            !document.getElementById(
+              "badgeMembro"
+            )
+          ) {
+
+            const badge =
+              document.createElement("span");
 
 
-          badge.id =
-            "badgeMembro";
+            badge.id =
+              "badgeMembro";
 
 
-          badge.className =
-            "whitespace-nowrap rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white";
+            badge.className =
+              "whitespace-nowrap rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white";
 
 
-          badge.textContent =
-            `★ ${resultado.assinatura.plano}`;
+            badge.textContent =
+              `★ ${resultado.assinatura.plano}`;
 
 
-          nomeUsuario.insertAdjacentElement(
-            "afterend",
-            badge
-          );
+            nomeUsuario.insertAdjacentElement(
+              "afterend",
+              badge
+            );
+
+          }
 
         }
 
+      } else {
+
+        console.error(
+          "Erro ao verificar assinatura:",
+          resposta.status
+        );
+
       }
+
+    } catch (erro) {
+
+      console.error(
+        "Erro ao verificar assinatura:",
+        erro
+      );
 
     }
 
-  } catch (erro) {
 
-    console.error(
-      "Erro ao verificar assinatura:",
-      erro
-    );
+    // =========================
+    // BOTÃO SAIR
+    // =========================
 
-  }
+    if (btnSair) {
 
+      btnSair.addEventListener(
+        "click",
+        () => {
 
-  // =========================
-  // BOTÃO SAIR
-  // =========================
+          localStorage.removeItem(
+            "token"
+          );
 
-  if (btnSair) {
+          localStorage.removeItem(
+            "usuario"
+          );
 
-    btnSair.addEventListener(
-      "click",
-      () => {
+          window.location.href =
+            "login.html";
 
-        localStorage.removeItem(
-          "token"
-        );
+        }
+      );
 
-        localStorage.removeItem(
-          "usuario"
-        );
-
-        window.location.href =
-          "login.html";
-
-      }
-    );
+    }
 
   }
-
-});
+);
