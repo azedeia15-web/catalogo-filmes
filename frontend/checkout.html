@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Checkout | Trasheira Violenta</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-black text-white">
+
+  <header class="border-b border-red-900 bg-zinc-950">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+
+      <a href="loja.html" class="text-xl font-black text-red-600">
+        ← VOLTAR PARA LOJA
+      </a>
+
+      <h1 class="text-2xl font-black">
+        FINALIZAR COMPRA
+      </h1>
+
+    </div>
+  </header>
+
+  <main class="mx-auto grid max-w-6xl gap-8 px-6 py-10 lg:grid-cols-2">
+
+    <!-- DADOS -->
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
+
+      <h2 class="text-2xl font-black text-red-600">
+        DADOS DO CLIENTE
+      </h2>
+
+      <form id="formCheckout" class="mt-6 space-y-4">
+
+        <input
+          type="text"
+          placeholder="Nome completo"
+          required
+          class="w-full rounded-lg border border-zinc-700 bg-black p-3">
+
+        <input
+          type="email"
+          placeholder="E-mail"
+          required
+          class="w-full rounded-lg border border-zinc-700 bg-black p-3">
+
+        <input
+          type="text"
+          placeholder="CEP"
+          required
+          class="w-full rounded-lg border border-zinc-700 bg-black p-3">
+
+        <input
+          type="text"
+          placeholder="Endereço"
+          required
+          class="w-full rounded-lg border border-zinc-700 bg-black p-3">
+
+        <input
+          type="text"
+          placeholder="Número"
+          required
+          class="w-full rounded-lg border border-zinc-700 bg-black p-3">
+
+        <select
+          required
+          class="w-full rounded-lg border border-zinc-700 bg-black p-3">
+
+          <option value="">Forma de pagamento</option>
+          <option>Pix</option>
+          <option>Cartão de crédito</option>
+          <option>Boleto</option>
+
+        </select>
+
+        <button
+          type="submit"
+          class="w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+          FINALIZAR PEDIDO
+
+        </button>
+
+      </form>
+
+      <p class="mt-5 text-center text-xs text-zinc-500">
+        Compra demonstrativa para fins acadêmicos.
+        Nenhum pagamento real será realizado.
+      </p>
+
+    </section>
+
+    <!-- RESUMO -->
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
+
+      <h2 class="text-2xl font-black text-red-600">
+        RESUMO DO PEDIDO
+      </h2>
+
+      <div
+        id="resumoCarrinho"
+        class="mt-6 space-y-4">
+      </div>
+
+      <div class="mt-8 border-t border-zinc-800 pt-5">
+
+        <div class="flex justify-between text-xl font-black">
+          <span>Total</span>
+
+          <span class="text-red-500">
+            R$ <span id="totalCheckout">0,00</span>
+          </span>
+        </div>
+
+        <p class="mt-3 text-sm font-bold text-green-500">
+          🚚 Frete grátis
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+
+    const carrinho =
+      JSON.parse(localStorage.getItem("carrinhoTrasheira")) || [];
+
+    const resumo =
+      document.getElementById("resumoCarrinho");
+
+    const totalElemento =
+      document.getElementById("totalCheckout");
+
+    let total = 0;
+
+    if (carrinho.length === 0) {
+
+      resumo.innerHTML = `
+        <p class="text-zinc-500">
+          Seu carrinho está vazio.
+        </p>
+      `;
+
+    } else {
+
+      carrinho.forEach(produto => {
+
+        const quantidade =
+          produto.quantidade || 1;
+
+        const subtotal =
+          produto.preco * quantidade;
+
+        total += subtotal;
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          "rounded-xl border border-zinc-800 bg-black p-4";
+
+        item.innerHTML = `
+          <div class="flex justify-between gap-4">
+
+            <div>
+              <h3 class="font-black">
+                ${produto.nome}
+              </h3>
+
+              ${
+                produto.tamanho
+                  ? `<p class="text-sm text-zinc-500">
+                      Tamanho: ${produto.tamanho}
+                    </p>`
+                  : ""
+              }
+
+              <p class="mt-2 text-sm text-zinc-400">
+                Quantidade: ${quantidade}
+              </p>
+
+            </div>
+
+            <p class="font-black text-red-500">
+              R$ ${subtotal.toFixed(2).replace(".", ",")}
+            </p>
+
+          </div>
+        `;
+
+        resumo.appendChild(item);
+
+      });
+
+    }
+
+    totalElemento.textContent =
+      total.toFixed(2).replace(".", ",");
+
+
+    document
+      .getElementById("formCheckout")
+      .addEventListener("submit", function(evento) {
+
+        evento.preventDefault();
+
+        if (carrinho.length === 0) {
+          alert("Seu carrinho está vazio.");
+          return;
+        }
+
+        alert(
+          "Pedido realizado com sucesso! Esta é uma compra demonstrativa."
+        );
+
+        localStorage.removeItem("carrinhoTrasheira");
+
+        window.location.href = "loja.html";
+
+      });
+
+  </script>
+
+</body>
+</html>

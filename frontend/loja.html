@@ -7,10 +7,6 @@
 
   <title>Loja | Trasheira Violenta</title>
 
-<link rel="stylesheet" href="style.css">
-
-
-
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
@@ -1376,21 +1372,14 @@
   }
 
 
-  function finalizarCompra() {
-
-    if (carrinho.length === 0) {
-
-      alert("Seu carrinho está vazio.");
-
-      return;
-
-    }
-
-    alert(
-      "Compra demonstrativa! Nenhum pagamento real será realizado."
-    );
-
+ function finalizarCompra() {
+  if (carrinho.length === 0) {
+    alert("Seu carrinho está vazio.");
+    return;
   }
+
+  window.location.href = "checkout.html";
+}
 
 
   function filtrarProdutos(categoria, botao) {
