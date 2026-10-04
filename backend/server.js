@@ -28,7 +28,15 @@ app.use(express.json());
 // ================= BANCO DE DADOS =================
 
 const pool = new Pool({
-
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT || 5432,
+  ssl: process.env.NODE_ENV === "production"
+    ? { rejectUnauthorized: false }
+    : false
+});
 
 async function criarTabelas() {
   try {
@@ -142,27 +150,7 @@ app.post("/cadastro", async (req, res) => {
     const usuarioExistente = await pool.query(
       "SELECT id FROM usuarios WHERE email = $1",
       [email]
-    );
-
-    if (usuarioExistente.rows.length > 0) {
-      return res.status(400).json({
-        erro: "Este e-mail já está cadastrado."
-      });
-    }
-
-    // Criptografa a senha
-    const senhaCriptografada = await bcrypt.hash(
-      senha,
-      10
-    );
-
-    // Salva usuário
-    const resultado = await pool.query(
-      `INSERT INTO usuarios
-       (nome, email, senha)
-       VALUES ($1, $2, $3)
-       RETURNING id, nome, email`,
-      [
+   
         nome,
         email,
         senhaCriptografada
