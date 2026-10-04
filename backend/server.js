@@ -28,6 +28,47 @@ app.use(express.json());
 // ================= BANCO DE DADOS =================
 
 const pool = new Pool({
+
+
+async function criarTabelas() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(150) NOT NULL,
+        email VARCHAR(150) UNIQUE NOT NULL,
+        senha TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS reviews (
+        id SERIAL PRIMARY KEY,
+        titulo VARCHAR(150) NOT NULL,
+        categoria VARCHAR(30) NOT NULL,
+        ano INTEGER NOT NULL,
+        nota DECIMAL(3,1) NOT NULL,
+        descricao TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS assinaturas (
+        id SERIAL PRIMARY KEY,
+        usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
+        plano VARCHAR(50) NOT NULL,
+        valor DECIMAL(10,2) NOT NULL,
+        status VARCHAR(20) DEFAULT 'ativo',
+        data_inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    console.log("Tabelas verificadas/criadas com sucesso.");
+  } catch (erro) {
+    console.error("Erro ao criar tabelas:", erro);
+  }
+}
+
+criarTabelas();
+
+
+
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
