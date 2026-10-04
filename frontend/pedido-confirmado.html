@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Pedido Confirmado | Trasheira Violenta</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-black text-white">
+
+  <main class="flex min-h-screen items-center justify-center px-6 py-12">
+
+    <section class="w-full max-w-2xl rounded-3xl border border-red-900 bg-zinc-950 p-8 text-center shadow-2xl">
+
+      <div class="text-6xl">
+        ✅
+      </div>
+
+      <p class="mt-5 text-sm font-black uppercase tracking-[.3em] text-red-600">
+        Pedido realizado
+      </p>
+
+      <h1 class="mt-4 text-4xl font-black">
+        PEDIDO CONFIRMADO
+      </h1>
+
+      <p class="mt-5 text-zinc-400">
+        Sua compra demonstrativa foi finalizada com sucesso.
+      </p>
+
+      <div class="mt-8 rounded-2xl border border-zinc-800 bg-black p-6 text-left">
+
+        <div class="flex justify-between border-b border-zinc-800 pb-4">
+          <span class="text-zinc-400">Número do pedido</span>
+          <span id="numeroPedido" class="font-black text-red-500">
+            #TV000000
+          </span>
+        </div>
+
+        <div class="mt-4 flex justify-between border-b border-zinc-800 pb-4">
+          <span class="text-zinc-400">Entrega</span>
+          <span class="font-bold">
+            Frete grátis
+          </span>
+        </div>
+
+        <div class="mt-4 flex justify-between">
+          <span class="text-zinc-400">Prazo estimado</span>
+          <span class="font-bold">
+            5 a 10 dias úteis
+          </span>
+        </div>
+
+      </div>
+
+      <div class="mt-8 rounded-xl border border-yellow-900 bg-yellow-950/30 p-4 text-sm text-yellow-200">
+        Este é um projeto acadêmico.
+        Nenhuma compra ou pagamento real foi realizado.
+      </div>
+
+      <a
+        href="loja.html"
+        class="mt-8 inline-block rounded-full bg-red-600 px-8 py-3 font-black transition hover:bg-red-500">
+
+        VOLTAR PARA A LOJA
+
+      </a>
+
+    </section>
+
+  </main>
+
+  <script>
+
+    const numeroPedido =
+      "TV" + Date.now().toString().slice(-6);
+
+    document.getElementById("numeroPedido").textContent =
+      "#" + numeroPedido;
+
+  </script>
+
+</body>
+</html>
