@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Loja | Trasheira Violenta</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            review: "#e50909"
+          },
+          boxShadow: {
+            red: "0 0 30px rgba(229,9,9,.16)"
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(100,0,0,.20), transparent 32%),
+        #030303;
+    }
+
+    .blood {
+      color: #e50909;
+      text-shadow:
+        0 3px 0 #700000,
+        0 6px 0 #330000,
+        0 0 18px rgba(255,0,0,.25);
+      filter: drop-shadow(0 0 2px red);
+    }
+
+    .produto-card {
+      transition: .25s;
+    }
+
+    .produto-card:hover {
+      transform: translateY(-6px);
+      border-color: #991b1b;
+      box-shadow: 0 0 30px rgba(229, 9, 9, .15);
+    }
+
+    .produto-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      background: #111;
+    }
+
+    #carrinhoPainel {
+      display: none;
+    }
+
+    .categoria-ativa {
+      background: #dc2626;
+      color: white;
+      border-color: #dc2626;
+    }
+
+    @media (max-width: 900px) {
+      .desktop-nav {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
+
+<body class="min-h-screen text-white">
+
+
+  <!-- ================= NAVBAR ================= -->
+
+  <nav class="sticky top-0 z-50 border-b border-zinc-800/80 bg-black/95 backdrop-blur">
+
+    <div class="mx-auto flex min-h-[86px] max-w-7xl items-center gap-8 px-6 py-4">
+
+      <a href="index.html"
+        class="blood shrink-0 text-2xl font-black leading-[.8]">
+
+        TRASHEIRA<br>VIOLENTA
+
+      </a>
+
+
+      <div class="desktop-nav flex flex-1 items-center justify-center gap-7 text-sm font-semibold">
+
+        <a href="index.html"
+          class="whitespace-nowrap transition hover:text-red-500">
+          ⌂ &nbsp; Início
+        </a>
+
+        <a href="jogos.html"
+          class="whitespace-nowrap transition hover:text-red-500">
+          🎮 &nbsp; Jogos
+        </a>
+
+        <a href="filmes.html"
+          class="whitespace-nowrap transition hover:text-red-500">
+          🎬 &nbsp; Filmes
+        </a>
+
+        <a href="series.html"
+          class="whitespace-nowrap transition hover:text-red-500">
+          ▣ &nbsp; Séries
+        </a>
+
+        <a href="loja.html"
+          class="relative whitespace-nowrap text-red-500 after:absolute after:-bottom-7 after:left-0 after:right-0 after:h-[3px] after:bg-red-600">
+          🛒 &nbsp; Loja
+        </a>
+
+        <a href="sobre.html"
+          class="whitespace-nowrap transition hover:text-red-500">
+          ★ &nbsp; Sobre
+        </a>
+
+        <a href="membro.html"
+          class="whitespace-nowrap rounded-full bg-red-600 px-4 py-2 font-black transition hover:bg-red-500">
+          ★ &nbsp; Seja Membro
+        </a>
+
+      </div>
+
+
+      <button
+        onclick="abrirCarrinho()"
+        class="relative whitespace-nowrap rounded-full border border-red-600 px-5 py-2 font-black transition hover:bg-red-600">
+
+        🛒 Carrinho
+
+        <span
+          id="contadorCarrinho"
+          class="absolute -right-2 -top-3 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-xs font-black">
+
+          0
+
+        </span>
+
+      </button>
+
+    </div>
+
+  </nav>
+
+
+
+  <!-- ================= HERO ================= -->
+
+  <section class="border-b border-zinc-900">
+
+    <div class="mx-auto max-w-7xl px-6 py-16 text-center">
+
+      <p class="font-black uppercase tracking-[.3em] text-red-600">
+        Produtos oficiais
+      </p>
+
+      <h1 class="mt-4 text-5xl font-black sm:text-6xl">
+
+        LOJA <span class="text-red-600">TRASHEIRA VIOLENTA</span>
+
+      </h1>
+
+      <p class="mx-auto mt-6 max-w-2xl leading-7 text-zinc-400">
+
+        Camisas, canecas, copos e acessórios inspirados
+        no universo da Trasheira Violenta.
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= FILTROS ================= -->
+
+  <section class="mx-auto max-w-7xl px-6 pt-12">
+
+    <h2 class="text-center text-2xl font-black">
+      ESCOLHA UMA <span class="text-red-600">CATEGORIA</span>
+    </h2>
+
+    <div class="mt-7 flex flex-wrap justify-center gap-3">
+
+      <button
+        onclick="filtrarProdutos('todos', this)"
+        class="categoria-btn categoria-ativa rounded-full border border-zinc-700 px-5 py-2 font-bold transition hover:border-red-600 hover:bg-red-600">
+
+        Todos
+
+      </button>
+
+      <button
+        onclick="filtrarProdutos('camisas', this)"
+        class="categoria-btn rounded-full border border-zinc-700 px-5 py-2 font-bold transition hover:border-red-600 hover:bg-red-600">
+
+        👕 Camisas
+
+      </button>
+
+      <button
+        onclick="filtrarProdutos('canecas', this)"
+        class="categoria-btn rounded-full border border-zinc-700 px-5 py-2 font-bold transition hover:border-red-600 hover:bg-red-600">
+
+        ☕ Canecas
+
+      </button>
+
+      <button
+        onclick="filtrarProdutos('copos', this)"
+        class="categoria-btn rounded-full border border-zinc-700 px-5 py-2 font-bold transition hover:border-red-600 hover:bg-red-600">
+
+        🥤 Copos
+
+      </button>
+
+      <button
+        onclick="filtrarProdutos('acessorios', this)"
+        class="categoria-btn rounded-full border border-zinc-700 px-5 py-2 font-bold transition hover:border-red-600 hover:bg-red-600">
+
+        ★ Acessórios
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= PRODUTOS ================= -->
+
+  <main class="mx-auto max-w-7xl px-6 py-14">
+
+    <div
+      id="gridProdutos"
+      class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+
+      <!-- CAMISA 1 -->
+
+      <article
+        data-categoria="camisas"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/camisa1.jpg" alt="Camisa Trasheira Violenta Preta">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-red-950 px-3 py-1 text-xs font-black text-red-500">
+            MAIS VENDIDA
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Camisa Trasheira Preta
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Camisa preta com estampa clássica da Trasheira Violenta.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 59,90
+          </div>
+
+          <select
+            id="tamanho1"
+            class="mt-4 w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3">
+
+            <option>P</option>
+            <option>M</option>
+            <option>G</option>
+            <option>GG</option>
+
+          </select>
+
+          <button
+            onclick="adicionarCarrinho('Camisa Trasheira Preta', 59.90, 'tamanho1')"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- CAMISA 2 -->
+
+      <article
+        data-categoria="camisas"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/camisa2.jpg" alt="Camisa Trasheira Violenta Branca">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-zinc-800 px-3 py-1 text-xs font-black">
+            CLÁSSICA
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Camisa Trasheira Branca
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Modelo branco com arte exclusiva do canal.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 59,90
+          </div>
+
+          <select
+            id="tamanho2"
+            class="mt-4 w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3">
+
+            <option>P</option>
+            <option>M</option>
+            <option>G</option>
+            <option>GG</option>
+
+          </select>
+
+          <button
+            onclick="adicionarCarrinho('Camisa Trasheira Branca', 59.90, 'tamanho2')"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- CAMISA 3 -->
+
+      <article
+        data-categoria="camisas"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/camisa3.jpg" alt="Camisa Terror Edition">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-red-950 px-3 py-1 text-xs font-black text-red-500">
+            EDIÇÃO LIMITADA
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Camisa Terror Edition
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Uma edição especial inspirada no cinema de terror.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 69,90
+          </div>
+
+          <select
+            id="tamanho3"
+            class="mt-4 w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3">
+
+            <option>P</option>
+            <option>M</option>
+            <option>G</option>
+            <option>GG</option>
+
+          </select>
+
+          <button
+            onclick="adicionarCarrinho('Camisa Terror Edition', 69.90, 'tamanho3')"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- CANECA 1 -->
+
+      <article
+        data-categoria="canecas"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/caneca1.jpg" alt="Caneca Trasheira Violenta">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-red-950 px-3 py-1 text-xs font-black text-red-500">
+            NOVO
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Caneca Trasheira Violenta
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Caneca preta com identidade visual do canal.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 34,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Caneca Trasheira Violenta', 34.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- CANECA 2 -->
+
+      <article
+        data-categoria="canecas"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/caneca2.jpg" alt="Caneca Terror Edition">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-zinc-800 px-3 py-1 text-xs font-black">
+            ESPECIAL
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Caneca Terror Edition
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Caneca com estampa inspirada em clássicos do terror.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 39,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Caneca Terror Edition', 39.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- COPO 1 -->
+
+      <article
+        data-categoria="copos"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/copo1.jpg" alt="Copo Térmico Trasheira">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-red-950 px-3 py-1 text-xs font-black text-red-500">
+            DESTAQUE
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Copo Térmico Preto
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Copo térmico com acabamento preto e logo do canal.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 49,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Copo Térmico Preto', 49.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- COPO 2 -->
+
+      <article
+        data-categoria="copos"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/copo2.jpg" alt="Copo Acrílico Trasheira">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-zinc-800 px-3 py-1 text-xs font-black">
+            CLÁSSICO
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Copo Acrílico
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Copo acrílico reutilizável com estampa do canal.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 29,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Copo Acrílico', 29.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- BONÉ -->
+
+      <article
+        data-categoria="acessorios"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/bone.jpg" alt="Boné Trasheira Violenta">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-red-950 px-3 py-1 text-xs font-black text-red-500">
+            NOVO
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Boné Trasheira Violenta
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Boné preto ajustável com logo bordado.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 44,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Boné Trasheira Violenta', 44.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- CHAVEIRO -->
+
+      <article
+        data-categoria="acessorios"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/chaveiro.jpg" alt="Chaveiro Trasheira Violenta">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-zinc-800 px-3 py-1 text-xs font-black">
+            ACESSÓRIO
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Chaveiro Trasheira
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Chaveiro personalizado com o símbolo do canal.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 14,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Chaveiro Trasheira', 14.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- ECOBAG -->
+
+      <article
+        data-categoria="acessorios"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/ecobag.jpg" alt="Ecobag Trasheira Violenta">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-zinc-800 px-3 py-1 text-xs font-black">
+            EXCLUSIVO
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Ecobag Trasheira Violenta
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Bolsa reutilizável com estampa exclusiva.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 29,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Ecobag Trasheira Violenta', 29.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- POSTER -->
+
+      <article
+        data-categoria="acessorios"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/poster.jpg" alt="Pôster Trasheira Violenta">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-red-950 px-3 py-1 text-xs font-black text-red-500">
+            COLECIONÁVEL
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Pôster Exclusivo
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Pôster decorativo inspirado no canal.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 24,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Pôster Exclusivo', 24.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- ADESIVOS -->
+
+      <article
+        data-categoria="acessorios"
+        class="produto-card overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950">
+
+        <img src="img/adesivos.jpg" alt="Kit de Adesivos">
+
+        <div class="p-5">
+
+          <span class="rounded-full bg-zinc-800 px-3 py-1 text-xs font-black">
+            KIT
+          </span>
+
+          <h2 class="mt-4 text-xl font-black">
+            Kit de Adesivos
+          </h2>
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+            Kit com adesivos temáticos da Trasheira Violenta.
+          </p>
+
+          <div class="mt-4 text-2xl font-black text-red-500">
+            R$ 12,90
+          </div>
+
+          <button
+            onclick="adicionarCarrinho('Kit de Adesivos', 12.90)"
+            class="mt-4 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+            🛒 Adicionar
+
+          </button>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </main>
+
+
+
+  <!-- ================= CARRINHO ================= -->
+
+  <div
+    id="carrinhoPainel"
+    class="fixed inset-0 z-[100] bg-black/80">
+
+    <div
+      class="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-red-900 bg-zinc-950 p-7">
+
+      <div class="flex items-center justify-between">
+
+        <h2 class="text-2xl font-black">
+          🛒 SEU CARRINHO
+        </h2>
+
+        <button
+          onclick="fecharCarrinho()"
+          class="text-3xl text-zinc-400 transition hover:text-red-500">
+          ×
+        </button>
+
+      </div>
+
+
+      <div
+        id="listaCarrinho"
+        class="mt-8 space-y-4">
+      </div>
+
+
+      <div class="mt-8 border-t border-zinc-800 pt-6">
+
+        <div class="flex justify-between text-xl font-black">
+
+          <span>Total</span>
+
+          <span class="text-red-500">
+            R$ <span id="totalCarrinho">0,00</span>
+          </span>
+
+        </div>
+
+
+        <button
+          onclick="finalizarCompra()"
+          class="mt-6 w-full rounded-full bg-red-600 p-3 font-black transition hover:bg-red-500">
+
+          FINALIZAR COMPRA
+
+        </button>
+
+
+        <button
+          onclick="limparCarrinho()"
+          class="mt-3 w-full rounded-full border border-zinc-700 p-3 font-bold text-zinc-400 transition hover:border-red-600 hover:text-white">
+
+          Limpar carrinho
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ================= BENEFÍCIOS ================= -->
+
+  <section class="border-y border-zinc-800 bg-zinc-950">
+
+    <div class="mx-auto grid max-w-7xl gap-8 px-6 py-12 text-center sm:grid-cols-3">
+
+      <div>
+
+        <div class="text-4xl">
+          🚚
+        </div>
+
+        <h3 class="mt-3 font-black">
+          ENTREGA
+        </h3>
+
+        <p class="mt-2 text-sm text-zinc-400">
+          Simulação de entrega para todo o Brasil
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <div class="text-4xl">
+          🔒
+        </div>
+
+        <h3 class="mt-3 font-black">
+          COMPRA SEGURA
+        </h3>
+
+        <p class="mt-2 text-sm text-zinc-400">
+          Ambiente demonstrativo e protegido
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <div class="text-4xl">
+          ↩
+        </div>
+
+        <h3 class="mt-3 font-black">
+          TROCAS
+        </h3>
+
+        <p class="mt-2 text-sm text-zinc-400">
+          Política de troca simulada para o projeto
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= PAGAMENTOS ================= -->
+
+  <section class="bg-black">
+
+    <div class="mx-auto max-w-7xl px-6 py-12 text-center">
+
+      <h2 class="text-2xl font-black">
+        FORMAS DE <span class="text-red-600">PAGAMENTO</span>
+      </h2>
+
+      <div class="mt-8 flex flex-wrap justify-center gap-5">
+
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950 px-6 py-4">
+          💳 Visa
+        </div>
+
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950 px-6 py-4">
+          💳 Mastercard
+        </div>
+
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950 px-6 py-4">
+          ◆ Pix
+        </div>
+
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950 px-6 py-4">
+          🧾 Boleto
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer class="border-t border-red-900/60 bg-black">
+
+    <div class="mx-auto max-w-7xl px-6 py-12">
+
+      <div class="grid gap-10 md:grid-cols-3">
+
+
+        <div>
+
+          <h2 class="blood text-3xl font-black">
+            TRASHEIRA<br>VIOLENTA
+          </h2>
+
+          <p class="mt-5 max-w-sm text-sm leading-6 text-zinc-400">
+
+            Reviews de filmes, séries, jogos e produtos
+            exclusivos inspirados no canal.
+
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <h3 class="font-black text-red-600">
+            NAVEGAÇÃO
+          </h3>
+
+          <div class="mt-4 space-y-3 text-sm">
+
+            <a href="index.html"
+              class="block text-zinc-300 hover:text-red-500">
+              Início
+            </a>
+
+            <a href="filmes.html"
+              class="block text-zinc-300 hover:text-red-500">
+              Filmes
+            </a>
+
+            <a href="series.html"
+              class="block text-zinc-300 hover:text-red-500">
+              Séries
+            </a>
+
+            <a href="jogos.html"
+              class="block text-zinc-300 hover:text-red-500">
+              Jogos
+            </a>
+
+            <a href="loja.html"
+              class="block text-red-500">
+              Loja
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div>
+
+          <h3 class="font-black text-red-600">
+            FORMAS DE PAGAMENTO
+          </h3>
+
+          <div class="mt-5 space-y-3 text-zinc-300">
+
+            <p>💳 Visa</p>
+            <p>💳 Mastercard</p>
+            <p>◆ Pix</p>
+            <p>🧾 Boleto</p>
+
+          </div>
+
+
+          <p class="mt-6 text-xs text-zinc-500">
+
+            Loja demonstrativa desenvolvida para fins acadêmicos.
+            Nenhuma compra real é realizada.
+
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="mt-10 border-t border-zinc-800 pt-6 text-center text-xs text-zinc-500">
+
+        © 2026 Trasheira Violenta
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+
+  <script>
+
+    let carrinho =
+      JSON.parse(localStorage.getItem("carrinhoTrasheira")) || [];
+
+
+    function adicionarCarrinho(nome, preco, selectId = null) {
+
+      let tamanho = null;
+
+      if (selectId) {
+        tamanho = document.getElementById(selectId).value;
+      }
+
+
+      carrinho.push({
+        nome: nome,
+        preco: preco,
+        tamanho: tamanho
+      });
+
+
+      salvarCarrinho();
+
+      atualizarCarrinho();
+
+      abrirCarrinho();
+
+    }
+
+
+
+    function salvarCarrinho() {
+
+      localStorage.setItem(
+        "carrinhoTrasheira",
+        JSON.stringify(carrinho)
+      );
+
+    }
+
+
+
+    function atualizarCarrinho() {
+
+      const lista =
+        document.getElementById("listaCarrinho");
+
+      const contador =
+        document.getElementById("contadorCarrinho");
+
+      const totalElemento =
+        document.getElementById("totalCarrinho");
+
+
+      lista.innerHTML = "";
+
+      contador.textContent = carrinho.length;
+
+
+      let total = 0;
+
+
+      if (carrinho.length === 0) {
+
+        lista.innerHTML = `
+
+          <div class="rounded-xl border border-zinc-800 p-6 text-center">
+
+            <p class="text-zinc-500">
+              Seu carrinho está vazio.
+            </p>
+
+          </div>
+
+        `;
+
+      }
+
+
+      carrinho.forEach((produto, index) => {
+
+        total += produto.preco;
+
+
+        const item =
+          document.createElement("div");
+
+
+        item.className =
+          "rounded-xl border border-zinc-800 bg-black p-4";
+
+
+        let tamanhoTexto = "";
+
+        if (produto.tamanho) {
+
+          tamanhoTexto = `
+
+            <p class="mt-1 text-sm text-zinc-500">
+              Tamanho: ${produto.tamanho}
+            </p>
+
+          `;
+
+        }
+
+
+        item.innerHTML = `
+
+          <div class="flex items-start justify-between gap-4">
+
+            <div>
+
+              <h3 class="font-black">
+                ${produto.nome}
+              </h3>
+
+              ${tamanhoTexto}
+
+              <p class="mt-2 font-black text-red-500">
+
+                R$ ${produto.preco.toFixed(2).replace(".", ",")}
+
+              </p>
+
+            </div>
+
+
+            <button
+              onclick="removerProduto(${index})"
+              class="text-xl text-zinc-500 transition hover:text-red-500">
+
+              ×
+
+            </button>
+
+          </div>
+
+        `;
+
+
+        lista.appendChild(item);
+
+      });
+
+
+      totalElemento.textContent =
+        total.toFixed(2).replace(".", ",");
+
+    }
+
+
+
+    function removerProduto(index) {
+
+      carrinho.splice(index, 1);
+
+      salvarCarrinho();
+
+      atualizarCarrinho();
+
+    }
+
+
+
+    function limparCarrinho() {
+
+      carrinho = [];
+
+      salvarCarrinho();
+
+      atualizarCarrinho();
+
+    }
+
+
+
+    function abrirCarrinho() {
+
+      document.getElementById("carrinhoPainel")
+        .style.display = "block";
+
+    }
+
+
+
+    function fecharCarrinho() {
+
+      document.getElementById("carrinhoPainel")
+        .style.display = "none";
+
+    }
+
+
+
+    function finalizarCompra() {
+
+      if (carrinho.length === 0) {
+
+        alert("Seu carrinho está vazio.");
+
+        return;
+
+      }
+
+
+      alert(
+        "Compra demonstrativa! Nenhum pagamento real será realizado."
+      );
+
+    }
+
+
+
+    function filtrarProdutos(categoria, botao) {
+
+      const produtos =
+        document.querySelectorAll("[data-categoria]");
+
+
+      produtos.forEach(produto => {
+
+        if (
+          categoria === "todos" ||
+          produto.dataset.categoria === categoria
+        ) {
+
+          produto.style.display = "block";
+
+        }
+
+        else {
+
+          produto.style.display = "none";
+
+        }
+
+      });
+
+
+      document
+        .querySelectorAll(".categoria-btn")
+        .forEach(btn => {
+
+          btn.classList.remove("categoria-ativa");
+
+        });
+
+
+      botao.classList.add("categoria-ativa");
+
+    }
+
+
+
+    atualizarCarrinho();
+
+  </script>
+
+</body>
+
+</html>
