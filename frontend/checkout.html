@@ -298,6 +298,16 @@ formaPagamento.addEventListener("change", function() {
   pagamentoCartao.classList.add("hidden");
   pagamentoBoleto.classList.add("hidden");
 
+
+
+
+const camposCartao =
+  pagamentoCartao.querySelectorAll("input");
+
+
+
+
+
   if (this.value === "pix") {
     pagamentoPix.classList.remove("hidden");
   }
