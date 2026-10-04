@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Reviews de Filmes | Trasheira Violenta</title>
+
+
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+
+    tailwind.config = {
+
+      theme: {
+
+        extend: {
+
+          colors: { review: "#e50909" },
+
+          boxShadow: { red: "0 0 30px rgba(229,9,9,.16)" }
+
+        }
+
+      }
+
+    }
+
+  </script>
+
+
+
+  <style>
+
+    body {
+
+      background:
+
+        radial-gradient(circle at 50% 0%, rgba(100,0,0,.20), transparent 32%),
+
+        #030303;
+
+    }
+
+
+
+    .blood {
+
+      color:#e50909;
+
+      text-shadow:
+
+        0 3px 0 #700000,
+
+        0 6px 0 #330000,
+
+        0 0 18px rgba(255,0,0,.25);
+
+      filter:drop-shadow(0 0 2px red);
+
+      position:relative;
+
+    }
+
+
+
+    .blood::after {
+
+      content:"";
+
+      position:absolute;
+
+      left:14%;
+
+      bottom:-18px;
+
+      width:6px;
+
+      height:20px;
+
+      background:#a40000;
+
+      border-radius:0 0 8px 8px;
+
+      box-shadow:
+
+        18px 9px 0 -2px #710000,
+
+        48px 4px 0 -3px #d00000,
+
+        80px 13px 0 -3px #760000,
+
+        125px 6px 0 -2px #a00000;
+
+    }
+
+
+
+    .page-hero {
+
+      background:
+
+        radial-gradient(circle at 12% 35%, rgba(100,0,0,.30), transparent 15%),
+
+        radial-gradient(circle at 90% 65%, rgba(100,0,0,.25), transparent 17%),
+
+        linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
+
+      background-size:auto,auto,5px 5px;
+
+    }
+
+
+
+    /* PÔSTER COM FUNDO DESFOCADO */
+
+    .poster {
+
+      position:relative;
+
+      overflow:hidden;
+
+      background:#050505;
+
+    }
+
+
+
+    .poster-bg {
+
+      position:absolute;
+
+      inset:-24px;
+
+      width:calc(100% + 48px);
+
+      height:calc(100% + 48px);
+
+      object-fit:cover;
+
+      filter:blur(20px) brightness(.35);
+
+      transform:scale(1.08);
+
+      z-index:0;
+
+    }
+
+
+
+    .poster-main {
+
+      position:absolute;
+
+      inset:0;
+
+      width:100%;
+
+      height:100%;
+
+      object-fit:contain;
+
+      object-position:center center;
+
+      z-index:1;
+
+    }
+
+
+
+    .poster::after {
+
+      content:"";
+
+      position:absolute;
+
+      inset:0;
+
+      background:linear-gradient(
+
+        to bottom,
+
+        rgba(0,0,0,.05) 0%,
+
+        rgba(0,0,0,.08) 65%,
+
+        rgba(0,0,0,.32) 100%
+
+      );
+
+      z-index:2;
+
+      pointer-events:none;
+
+    }
+
+
+
+    @media (max-width:900px) {
+
+      .desktop-nav { overflow-x:auto; }
+
+    }
+
+  </style>
+
+</head>
+
+
+
+<body class="min-h-screen text-white">
+
+
+
+  <!-- NAVBAR -->
+
+  <nav class="sticky top-0 z-50 border-b border-zinc-800/80 bg-black/95 backdrop-blur">
+
+    <div class="mx-auto flex min-h-[86px] max-w-7xl items-center gap-8 px-6 py-4">
+
+
+
+      <a href="index.html" class="blood shrink-0 text-2xl font-black leading-[.8]">
+
+        TRASHEIRA<br>VIOLENTA
+
+      </a>
+
+
+
+      <div class="desktop-nav flex flex-1 items-center justify-center gap-7 text-sm font-semibold">
+
+        <a href="index.html" class="whitespace-nowrap transition hover:text-red-500">⌂ &nbsp; Início</a>
+
+        <a href="jogos.html" class="whitespace-nowrap transition hover:text-red-500">🎮 &nbsp; Jogos</a>
+
+        <a href="filmes.html" class="relative whitespace-nowrap text-red-500 after:absolute after:-bottom-7 after:left-0 after:right-0 after:h-[3px] after:bg-red-600">🎬 &nbsp; Filmes</a>
+
+        <a href="series.html" class="whitespace-nowrap transition hover:text-red-500">▣ &nbsp; Séries</a>
+
+        <a href="sobre.html" class="whitespace-nowrap transition hover:text-red-500">★ &nbsp; Sobre</a>
+
+        <a
+          href="membro.html"
+          class="whitespace-nowrap rounded-full bg-red-600 px-4 py-2 font-black text-white transition hover:bg-red-500"
+        >
+          ★ &nbsp; Seja Membro
+        </a>
+
+      </div>
+
+
+
+      <div class="hidden h-10 w-64 items-center rounded-full bg-zinc-900 px-4 md:flex">
+
+        <input
+
+          id="searchInput"
+
+          type="text"
+
+          placeholder="Buscar reviews..."
+
+          class="w-full bg-transparent text-sm text-white outline-none placeholder:text-zinc-600"
+
+        >
+
+        <span class="text-xl text-zinc-400">⌕</span>
+
+      </div>
+      <!-- USUÁRIO LOGADO -->
+      <div class="flex items-center gap-3 text-sm">
+        <span
+          id="nomeUsuario"
+          class="whitespace-nowrap font-bold text-zinc-300"
+        ></span>
+
+        <button
+          id="btnSair"
+          class="rounded-lg border border-red-600 px-4 py-2 font-bold text-white transition hover:bg-red-600"
+        >
+          Sair
+        </button>
+      </div>
+
+
+
+
+    </div>
+
+  </nav>
+
+
+
+  <!-- HERO -->
+
+  <section class="page-hero border-b border-zinc-900">
+
+    <div class="mx-auto max-w-7xl px-6 py-12 text-center">
+
+      <p class="font-black uppercase tracking-[.22em] text-red-600">TRASHEIRA VIOLENTA</p>
+
+      <h1 class="mt-2 text-4xl font-black tracking-tight sm:text-5xl">Reviews de Filmes</h1>
+
+      <p class="mx-auto mt-3 max-w-2xl text-zinc-400">
+
+        Terror, suspense e filmes sombrios em destaque.
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- FILMES -->
+
+  <main class="mx-auto max-w-7xl px-6 py-12">
+
+
+
+    <div class="mb-7 flex items-center justify-between gap-4">
+
+      <h2 class="border-l-[6px] border-red-600 pl-4 text-2xl font-black sm:text-3xl">
+
+        TODOS OS FILMES
+
+      </h2>
+
+
+
+      <span class="text-sm text-zinc-500">6 conteúdos</span>
+
+    </div>
+
+
+
+    <div id="reviewGrid" class="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+
+
+
+      <!-- IT: A COISA -->
+
+      <article
+
+        data-search="it a coisa pennywise terror filme"
+
+        class="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-red transition duration-300 hover:-translate-y-1 hover:border-red-800"
+
+      >
+
+        <div class="poster h-72">
+
+          <img
+
+            src="img/it a coisa.jpg"
+
+            alt=""
+
+            class="poster-bg"
+
+          >
+
+          <img
+
+            src="img/it a coisa.jpg"
+
+            alt="It: A Coisa"
+
+            class="poster-main"
+
+          >
+
+        </div>
+
+
+
+        <div class="flex flex-1 flex-col p-5">
+
+          <span class="block w-full rounded-full bg-black px-3 py-1 text-[11px] font-black text-red-600">
+
+            FILME
+
+          </span>
+
+
+
+          <h2 class="mt-3 text-xl font-black">It: A Coisa</h2>
+
+
+
+          <p class="mt-1 text-lg font-black text-red-600">
+
+            <span class="text-yellow-400">★</span> 9,7
+
+            <small class="text-xs font-normal text-zinc-400">/10</small>
+
+          </p>
+
+
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+
+            Um terror assustador com o Pennywise e uma atmosfera sombria em Derry.
+
+          </p>
+
+
+
+          <div class="mt-auto pt-5">
+
+            <a
+
+              href="https://www\.youtube.com/watch?v=23wI3ZF3zE4"
+
+              target="_blank"
+
+              rel="noopener noreferrer"
+
+              class="flex w-full items-center justify-center rounded-full border border-red-600 px-4 py-2 text-sm font-bold transition hover:bg-red-600"
+
+            >
+
+              Ver review →
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- TELEFONE PRETO -->
+
+      <article
+
+        data-search="telefone preto 2022 black phone terror filme"
+
+        class="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-red transition duration-300 hover:-translate-y-1 hover:border-red-800"
+
+      >
+
+        <div class="poster h-72">
+
+          <img
+
+            src="img/telefone preto.jpg"
+
+            alt=""
+
+            class="poster-bg"
+
+          >
+
+          <img
+
+            src="img/telefone preto.jpg"
+
+            alt="Telefone Preto (2022)"
+
+            class="poster-main"
+
+          >
+
+        </div>
+
+
+
+        <div class="flex flex-1 flex-col p-5">
+
+          <span class="block w-full rounded-full bg-black px-3 py-1 text-[11px] font-black text-red-600">
+
+            FILME
+
+          </span>
+
+
+
+          <h2 class="mt-3 text-xl font-black">Telefone Preto (2022)</h2>
+
+
+
+          <p class="mt-1 text-lg font-black text-red-600">
+
+            <span class="text-yellow-400">★</span> 9,4
+
+            <small class="text-xs font-normal text-zinc-400">/10</small>
+
+          </p>
+
+
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+
+            Tensão psicológica, suspense e uma presença perturbadora do começo ao fim.
+
+          </p>
+
+
+
+          <div class="mt-auto pt-5">
+
+            <a
+
+              href="https://www\.youtube.com/watch?v=LgBVklD32Go"
+
+              target="_blank"
+
+              rel="noopener noreferrer"
+
+              class="flex w-full items-center justify-center rounded-full border border-red-600 px-4 py-2 text-sm font-bold transition hover:bg-red-600"
+
+            >
+
+              Ver review →
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- A FREIRA -->
+
+      <article
+
+        data-search="a freira 2018 valak terror filme"
+
+        class="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-red transition duration-300 hover:-translate-y-1 hover:border-red-800"
+
+      >
+
+        <div class="poster h-72">
+
+          <img
+
+            src="img/a freira.jpg"
+
+            alt=""
+
+            class="poster-bg"
+
+          >
+
+          <img
+
+            src="img/a freira.jpg"
+
+            alt="A Freira (2018)"
+
+            class="poster-main"
+
+          >
+
+        </div>
+
+
+
+        <div class="flex flex-1 flex-col p-5">
+
+          <span class="block w-full rounded-full bg-black px-3 py-1 text-[11px] font-black text-red-600">
+
+            FILME
+
+          </span>
+
+
+
+          <h2 class="mt-3 text-xl font-black">A Freira (2018)</h2>
+
+
+
+          <p class="mt-1 text-lg font-black text-red-600">
+
+            <span class="text-yellow-400">★</span> 9,2
+
+            <small class="text-xs font-normal text-zinc-400">/10</small>
+
+          </p>
+
+
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+
+            Clima pesado, convento sombrio e a presença assustadora de Valak.
+
+          </p>
+
+
+
+          <div class="mt-auto pt-5">
+
+            <a
+
+              href="https://www\.youtube.com/watch?v=D4W7Ao-Hzbc"
+
+              target="_blank"
+
+              rel="noopener noreferrer"
+
+              class="flex w-full items-center justify-center rounded-full border border-red-600 px-4 py-2 text-sm font-bold transition hover:bg-red-600"
+
+            >
+
+              Ver review →
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- A ENTIDADE -->
+
+      <article
+
+        data-search="a entidade sinister terror filme"
+
+        class="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-red transition duration-300 hover:-translate-y-1 hover:border-red-800"
+
+      >
+
+        <div class="poster h-72">
+
+          <img
+
+            src="img/a entidade.jpg"
+
+            alt=""
+
+            class="poster-bg"
+
+          >
+
+          <img
+
+            src="img/a entidade.jpg"
+
+            alt="A Entidade"
+
+            class="poster-main"
+
+          >
+
+        </div>
+
+
+
+        <div class="flex flex-1 flex-col p-5">
+
+          <span class="block w-full rounded-full bg-black px-3 py-1 text-[11px] font-black text-red-600">
+
+            FILME
+
+          </span>
+
+
+
+          <h2 class="mt-3 text-xl font-black">A Entidade</h2>
+
+
+
+          <p class="mt-1 text-lg font-black text-red-600">
+
+            <span class="text-yellow-400">★</span> 8,9
+
+            <small class="text-xs font-normal text-zinc-400">/10</small>
+
+          </p>
+
+
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+
+            Um terror sombrio com fitas perturbadoras e uma sensação constante de medo.
+
+          </p>
+
+
+
+          <div class="mt-auto pt-5">
+
+            <a
+
+              href="https://www\.youtube.com/watch?v=TFf6700y4XM"
+
+              target="_blank"
+
+              rel="noopener noreferrer"
+
+              class="flex w-full items-center justify-center rounded-full border border-red-600 px-4 py-2 text-sm font-bold transition hover:bg-red-600"
+
+            >
+
+              Ver review →
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- MORTE DO DEMÔNIO -->
+
+      <article
+
+        data-search="a morte do demonio a ascensao 2023 evil dead rise terror filme"
+
+        class="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-red transition duration-300 hover:-translate-y-1 hover:border-red-800"
+
+      >
+
+        <div class="poster h-72">
+
+          <img
+
+            src="img/a morte do demonio.jpg"
+
+            alt=""
+
+            class="poster-bg"
+
+          >
+
+          <img
+
+            src="img/a morte do demonio.jpg"
+
+            alt="A Morte do Demônio: A Ascensão (2023)"
+
+            class="poster-main"
+
+          >
+
+        </div>
+
+
+
+        <div class="flex flex-1 flex-col p-5">
+
+          <span class="block w-full rounded-full bg-black px-3 py-1 text-[11px] font-black text-red-600">
+
+            FILME
+
+          </span>
+
+
+
+          <h2 class="mt-3 text-xl font-black">A Morte do Demônio: A Ascensão (2023)</h2>
+
+
+
+          <p class="mt-1 text-lg font-black text-red-600">
+
+            <span class="text-yellow-400">★</span> 8,5
+
+            <small class="text-xs font-normal text-zinc-400">/10</small>
+
+          </p>
+
+
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+
+            Violento, tenso e brutal, com cenas fortes e um clima claustrofóbico.
+
+          </p>
+
+
+
+          <div class="mt-auto pt-5">
+
+            <a
+
+              href="https://www\.youtube.com/watch?v=slkTW6WJuXk"
+
+              target="_blank"
+
+              rel="noopener noreferrer"
+
+              class="flex w-full items-center justify-center rounded-full border border-red-600 px-4 py-2 text-sm font-bold transition hover:bg-red-600"
+
+            >
+
+              Ver review →
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+
+      <!-- SEXTA-FEIRA 13 -->
+
+      <article
+
+        data-search="sexta feira 13 friday the 13th terror filme"
+
+        class="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 shadow-red transition duration-300 hover:-translate-y-1 hover:border-red-800"
+
+      >
+
+        <div class="poster h-72">
+
+          <img
+
+            src="img/sexta feira 13.jpg"
+
+            alt=""
+
+            class="poster-bg"
+
+          >
+
+          <img
+
+            src="img/sexta feira 13.jpg"
+
+            alt="Sexta-Feira 13"
+
+            class="poster-main"
+
+          >
+
+        </div>
+
+
+
+        <div class="flex flex-1 flex-col p-5">
+
+          <span class="block w-full rounded-full bg-black px-3 py-1 text-[11px] font-black text-red-600">
+
+            FILME
+
+          </span>
+
+
+
+          <h2 class="mt-3 text-xl font-black">Sexta-Feira 13</h2>
+
+
+
+          <p class="mt-1 text-lg font-black text-red-600">
+
+            <span class="text-yellow-400">★</span> 8,0
+
+            <small class="text-xs font-normal text-zinc-400">/10</small>
+
+          </p>
+
+
+
+          <p class="mt-2 text-sm leading-6 text-zinc-400">
+
+            Um clássico slasher com acampamento sombrio e muito suspense mortal.
+
+          </p>
+
+
+
+          <div class="mt-auto pt-5">
+
+            <a
+
+              href="https://www\.youtube.com/watch?v=Y4yPydOaAzo"
+
+              target="_blank"
+
+              rel="noopener noreferrer"
+
+              class="flex w-full items-center justify-center rounded-full border border-red-600 px-4 py-2 text-sm font-bold transition hover:bg-red-600"
+
+            >
+
+              Ver review →
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+
+    </div>
+
+  </main>
+
+
+
+  <!-- FOOTER -->
+
+  <footer class="relative mt-20 overflow-hidden border-t border-red-900/60 bg-black text-white">
+
+
+
+    <div
+
+      class="absolute inset-0 opacity-20"
+
+      style="background-image: radial-gradient(circle at 15% 20%, #4d0505 0, transparent 25%), radial-gradient(circle at 90% 80%, #4d0505 0, transparent 25%);"
+
+    ></div>
+
+
+
+    <div class="relative mx-auto max-w-7xl px-8 py-14">
+
+      <div class="grid gap-8 lg:grid-cols-[1.3fr_1fr_1.1fr_1fr]">
+
+
+
+        <div class="border-b border-zinc-800 pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8">
+
+          <h2 class="blood text-4xl font-black leading-[0.82] tracking-tight">
+
+            TRASHEIRA<br>VIOLENTA
+
+          </h2>
+
+
+
+          <p class="mt-4 text-sm font-semibold uppercase tracking-wide text-zinc-300">
+
+            REVIEWS DE FILMES, SÉRIES<br>E JOGOS
+
+          </p>
+
+
+
+          <p class="mt-7 max-w-xs text-sm leading-6 text-zinc-300">
+
+            O site oficial do projeto Trasheira Violenta.
+
+            Aqui você encontra reviews, críticas e indicações
+
+            dos melhores (e piores) filmes, séries e jogos.
+
+          </p>
+
+
+
+          <p class="mt-5 text-sm italic text-zinc-400">
+
+            Se é pra ver, é melhor com a gente.
+
+          </p>
+
+
+
+          <div class="mt-4 h-1 w-32 bg-red-600"></div>
+
+        </div>
+
+
+
+        <div class="border-b border-zinc-800 pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8">
+
+          <h3 class="mb-7 text-xl font-black text-red-600">NAVEGAÇÃO</h3>
+
+
+
+          <div class="space-y-4 text-sm">
+
+            <a href="index.html" class="block text-zinc-200 transition hover:text-red-500">⌂ &nbsp; Início</a>
+
+            <a href="filmes.html" class="block text-zinc-200 transition hover:text-red-500">▣ &nbsp; Filmes</a>
+
+            <a href="series.html" class="block text-zinc-200 transition hover:text-red-500">▣ &nbsp; Séries</a>
+
+            <a href="jogos.html" class="block text-zinc-200 transition hover:text-red-500">🎮 &nbsp; Jogos</a>
+
+            <a href="sobre.html" class="block text-zinc-200 transition hover:text-red-500">☆ &nbsp; Sobre</a>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="border-b border-zinc-800 pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8">
+
+          <h3 class="mb-7 text-xl font-black text-red-600">CONTATO</h3>
+
+
+
+          <div class="space-y-4 text-sm text-zinc-200">
+
+            <p>✉ &nbsp; contato\@trasheiraviolenta.com</p>
+
+            <p>✉ &nbsp; suporte\@trasheiraviolenta.com</p>
+
+            <p>◔ &nbsp; (21) 98765-4321</p>
+
+          </div>
+
+
+
+          <div class="my-7 border-t border-zinc-700"></div>
+
+
+
+          <p class="text-sm italic leading-6 text-zinc-400">
+
+            💬 Dúvidas, sugestões ou parcerias?
+
+            Mande um e-mail ou nos chame pelo WhatsApp.
+
+          </p>
+
+        </div>
+
+
+
+        <div>
+
+          <h3 class="mb-7 text-xl font-black text-red-600">REDES SOCIAIS</h3>
+
+
+
+          <div class="flex flex-wrap gap-5 text-xl text-white">
+
+            <a href="https://youtube.com/@TrasheiraViolenta" target="_blank" rel="noopener noreferrer" class="transition hover:scale-110 hover:text-red-500" title="YouTube">▶</a>
+
+
+
+            <a href="https://www\.instagram.com/trasheiraviolenta/" target="_blank" rel="noopener noreferrer" class="transition hover:scale-110 hover:text-red-500" title="Instagram">◎</a>
+
+
+
+            <a href="https://www\.tiktok.com/@trasheiraviolenta" target="_blank" rel="noopener noreferrer" class="transition hover:scale-110 hover:text-red-500" title="TikTok">♪</a>
+
+
+
+            <a href="https://x.com/canaltrasheira" target="_blank" rel="noopener noreferrer" class="transition hover:scale-110 hover:text-red-500" title="X">𝕏</a>
+
+
+
+            <a href="https://www\.facebook.com/trasheiraviolenta/" target="_blank" rel="noopener noreferrer" class="transition hover:scale-110 hover:text-red-500" title="Facebook">◉</a>
+
+          </div>
+
+
+
+          <h3 class="mb-3 mt-8 text-xl font-black text-red-600">SIGA-NOS</h3>
+
+
+
+          <p class="text-sm leading-6 text-zinc-400">
+
+            E fique por dentro de tudo em primeira mão!
+
+          </p>
+
+
+
+          <div class="mt-12 border-t border-red-900/40 pt-5">
+
+            <div class="flex items-end justify-between gap-10 text-xs text-zinc-500">
+
+
+
+              <div class="min-w-[110px]">
+
+                TRASHEIRA VIOLENTA<br>
+
+                © 2026
+
+              </div>
+
+
+
+              <div class="min-w-[110px] text-right">
+
+                <span class="text-white">🛡</span>
+
+                <strong class="text-zinc-300">SITE SEGURO</strong><br>
+
+                Conexão protegida
+
+              </div>
+
+
+
+            </div>
+
+          </div>
+
+
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <script>
+
+    const search = document.getElementById("searchInput");
+
+    const cards = [...document.querySelectorAll("[data-search]")];
+
+
+
+    search?.addEventListener("input", () => {
+
+      const q = search.value.trim().toLowerCase();
+
+
+
+      cards.forEach(card => {
+
+        card.style.display =
+
+          !q || card.dataset.search.includes(q)
+
+            ? ""
+
+            : "none";
+
+      });
+
+    });
+
+  </script>
+
+
+
+  <script src="auth.js"></script>
+
+</body>
+
+</html>

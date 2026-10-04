@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar | Trasheira Violenta</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(120,0,0,.25), transparent 35%),
+        #030303;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-white">
+
+  <main class="flex min-h-screen items-center justify-center px-5 py-10">
+
+    <div class="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl">
+
+      <div class="mb-8 text-center">
+        <h1 class="text-4xl font-black text-red-600">
+          TRASHEIRA <span class="text-white">VIOLENTA</span>
+        </h1>
+
+        <p class="mt-3 text-sm text-zinc-400">
+          Entre na sua conta para acessar o site
+        </p>
+      </div>
+
+      <div class="mb-7 grid grid-cols-2 rounded-lg bg-zinc-900 p-1">
+
+        <button
+          id="btnLogin"
+          class="rounded-md bg-red-600 px-4 py-2 font-bold"
+        >
+          Entrar
+        </button>
+
+        <button
+          id="btnCadastro"
+          class="rounded-md px-4 py-2 font-bold text-zinc-400"
+        >
+          Criar conta
+        </button>
+
+      </div>
+
+      <!-- LOGIN -->
+      <form id="formLogin" class="space-y-4">
+
+        <div>
+          <label class="mb-2 block text-sm font-bold">
+            E-mail
+          </label>
+
+          <input
+            id="loginEmail"
+            type="email"
+            required
+            placeholder="seuemail@email.com"
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+          >
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-bold">
+            Senha
+          </label>
+
+          <input
+            id="loginSenha"
+            type="password"
+            required
+            placeholder="Sua senha"
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="w-full rounded-lg bg-red-600 p-3 font-black hover:bg-red-500"
+        >
+          ENTRAR
+        </button>
+
+      </form>
+
+      <!-- CADASTRO -->
+      <form id="formCadastro" class="hidden space-y-4">
+
+        <div>
+          <label class="mb-2 block text-sm font-bold">
+            Nome
+          </label>
+
+          <input
+            id="cadastroNome"
+            type="text"
+            required
+            placeholder="Seu nome"
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+          >
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-bold">
+            E-mail
+          </label>
+
+          <input
+            id="cadastroEmail"
+            type="email"
+            required
+            placeholder="seuemail@email.com"
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+          >
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-bold">
+            Senha
+          </label>
+
+          <input
+            id="cadastroSenha"
+            type="password"
+            minlength="6"
+            required
+            placeholder="Mínimo 6 caracteres"
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="w-full rounded-lg bg-red-600 p-3 font-black hover:bg-red-500"
+        >
+          CRIAR CONTA
+        </button>
+
+      </form>
+
+      <p
+        id="mensagem"
+        class="mt-5 text-center text-sm"
+      ></p>
+
+    </div>
+
+  </main>
+
+  <script src="login.js"></script>
+
+</body>
+</html>

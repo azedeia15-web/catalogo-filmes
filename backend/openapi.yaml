@@ -1,0 +1,289 @@
+openapi: 3.0.3
+
+info:
+  title: API Trasheira Violenta
+  description: >
+    API responsável pelo cadastro de usuários, autenticação,
+    gerenciamento de reviews e assinaturas do sistema Trasheira Violenta.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+
+tags:
+  - name: Usuários
+  - name: Reviews
+  - name: Assinaturas
+
+paths:
+
+  /cadastro:
+    post:
+      tags:
+        - Usuários
+      summary: Cadastrar um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nome
+                - email
+                - senha
+              properties:
+                nome:
+                  type: string
+                  example: João Silva
+                email:
+                  type: string
+                  example: joao@email.com
+                senha:
+                  type: string
+                  example: "123456"
+
+      responses:
+        "201":
+          description: Usuário cadastrado com sucesso
+        "400":
+          description: Dados inválidos
+        "500":
+          description: Erro interno do servidor
+
+
+  /login:
+    post:
+      tags:
+        - Usuários
+      summary: Realizar login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - senha
+              properties:
+                email:
+                  type: string
+                  example: joao@email.com
+                senha:
+                  type: string
+                  example: "123456"
+
+      responses:
+        "200":
+          description: Login realizado com sucesso
+        "401":
+          description: E-mail ou senha incorretos
+        "500":
+          description: Erro interno
+
+
+  /reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Listar todas as reviews
+
+      responses:
+        "200":
+          description: Lista de reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+
+    post:
+      tags:
+        - Reviews
+      summary: Cadastrar uma nova review
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewInput"
+
+      responses:
+        "201":
+          description: Review cadastrada com sucesso
+        "400":
+          description: Dados inválidos
+        "401":
+          description: Usuário não autenticado
+
+
+  /reviews/{id}:
+    put:
+      tags:
+        - Reviews
+      summary: Editar uma review
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewInput"
+
+      responses:
+        "200":
+          description: Review editada com sucesso
+        "401":
+          description: Usuário não autenticado
+        "404":
+          description: Review não encontrada
+
+
+    delete:
+      tags:
+        - Reviews
+      summary: Excluir uma review
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: Review excluída com sucesso
+        "401":
+          description: Usuário não autenticado
+        "404":
+          description: Review não encontrada
+
+
+  /assinaturas:
+    post:
+      tags:
+        - Assinaturas
+      summary: Criar ou atualizar assinatura
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plano:
+                  type: string
+                  enum:
+                    - Básico
+                    - Premium
+                  example: Premium
+
+      responses:
+        "201":
+          description: Assinatura realizada com sucesso
+        "200":
+          description: Assinatura atualizada
+        "400":
+          description: Plano inválido
+        "401":
+          description: Usuário não autenticado
+
+
+  /minha-assinatura:
+    get:
+      tags:
+        - Assinaturas
+      summary: Consultar assinatura do usuário
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Informações da assinatura
+        "401":
+          description: Usuário não autenticado
+
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+
+  schemas:
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        titulo:
+          type: string
+          example: God of War
+        categoria:
+          type: string
+          example: Jogo
+        ano:
+          type: integer
+          example: 2018
+        nota:
+          type: number
+          example: 9.5
+        descricao:
+          type: string
+          example: Excelente jogo de ação e aventura.
+
+
+    ReviewInput:
+      type: object
+      required:
+        - titulo
+        - categoria
+        - ano
+        - nota
+
+      properties:
+        titulo:
+          type: string
+          example: God of War
+
+        categoria:
+          type: string
+          example: Jogo
+
+        ano:
+          type: integer
+          example: 2018
+
+        nota:
+          type: number
+          example: 9.5
+
+        descricao:
+          type: string
+          example: Excelente jogo.

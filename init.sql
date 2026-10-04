@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS filmes (
+  id SERIAL PRIMARY KEY,
+  titulo VARCHAR(150) NOT NULL,
+  genero VARCHAR(100),
+  ano INTEGER,
+  nota DECIMAL(3,1)
+);
+
+CREATE TABLE IF NOT EXISTS reviews (
+  id SERIAL PRIMARY KEY,
+  titulo VARCHAR(150) NOT NULL,
+  categoria VARCHAR(30) NOT NULL,
+  ano INTEGER NOT NULL,
+  nota DECIMAL(3,1) NOT NULL,
+  descricao TEXT
+);

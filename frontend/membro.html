@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Seja Membro | Trasheira Violenta</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(120,0,0,.25), transparent 35%),
+        #030303;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-white">
+
+  <nav class="border-b border-zinc-800 bg-black">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+
+      <a href="index.html" class="text-2xl font-black text-red-600">
+        TRASHEIRA <span class="text-white">VIOLENTA</span>
+      </a>
+
+      <a
+        href="index.html"
+        class="rounded-lg border border-zinc-700 px-4 py-2 font-bold hover:border-red-600"
+      >
+        Voltar ao site
+      </a>
+
+    </div>
+  </nav>
+
+
+  <main class="mx-auto max-w-6xl px-6 py-14">
+
+    <div class="mb-10 text-center">
+
+      <p class="font-black uppercase tracking-widest text-red-600">
+        Apoie o canal
+      </p>
+
+      <h1 class="mt-3 text-4xl font-black sm:text-5xl">
+        SEJA <span class="text-red-600">MEMBRO</span>
+      </h1>
+
+      <p class="mx-auto mt-4 max-w-2xl text-zinc-400">
+        Escolha um plano e tenha acesso aos benefícios exclusivos.
+      </p>
+
+    </div>
+
+
+    <div class="grid gap-6 md:grid-cols-2">
+
+      <!-- PLANO BÁSICO -->
+
+      <button
+        type="button"
+        data-plano="Básico"
+        data-valor="9.90"
+        class="plano rounded-2xl border border-zinc-800 bg-zinc-950 p-7 text-left transition hover:border-red-600"
+      >
+
+        <p class="text-sm font-black uppercase text-red-600">
+          Plano Básico
+        </p>
+
+        <h2 class="mt-3 text-4xl font-black">
+          R$ 9,90
+          <span class="text-sm font-normal text-zinc-500">
+            / mês
+          </span>
+        </h2>
+
+        <div class="mt-6 space-y-3 text-zinc-300">
+          <p>✓ Apoio ao canal</p>
+          <p>✓ Selo de membro</p>
+          <p>✓ Conteúdos exclusivos</p>
+        </div>
+
+      </button>
+
+
+      <!-- PLANO PREMIUM -->
+
+      <button
+        type="button"
+        data-plano="Premium"
+        data-valor="19.90"
+        class="plano rounded-2xl border border-zinc-800 bg-zinc-950 p-7 text-left transition hover:border-red-600"
+      >
+
+        <p class="text-sm font-black uppercase text-red-600">
+          Plano Premium
+        </p>
+
+        <h2 class="mt-3 text-4xl font-black">
+          R$ 19,90
+          <span class="text-sm font-normal text-zinc-500">
+            / mês
+          </span>
+        </h2>
+
+        <div class="mt-6 space-y-3 text-zinc-300">
+          <p>✓ Todos os benefícios do Básico</p>
+          <p>✓ Reviews antecipadas</p>
+          <p>✓ Conteúdo Premium</p>
+        </div>
+
+      </button>
+
+    </div>
+
+
+    <!-- PAGAMENTO -->
+
+    <section
+      id="areaPagamento"
+      class="mt-10 hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-7"
+    >
+
+      <h2 class="text-2xl font-black">
+        Finalizar assinatura
+      </h2>
+
+      <p
+        id="planoSelecionado"
+        class="mt-2 text-red-500"
+      ></p>
+
+
+      <form id="formPagamento" class="mt-7 space-y-4">
+
+        <div>
+          <label class="mb-2 block font-bold">
+            Nome no cartão
+          </label>
+
+          <input
+            id="nomeCartao"
+            type="text"
+            required
+            placeholder="Nome completo"
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+          >
+        </div>
+
+
+        <div>
+          <label class="mb-2 block font-bold">
+            Número do cartão
+          </label>
+
+          <input
+            id="numeroCartao"
+            type="text"
+            required
+            placeholder="0000 0000 0000 0000"
+            maxlength="19"
+            class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+          >
+        </div>
+
+
+        <div class="grid grid-cols-2 gap-4">
+
+          <div>
+            <label class="mb-2 block font-bold">
+              Validade
+            </label>
+
+            <input
+              id="validade"
+              type="text"
+              required
+              placeholder="MM/AA"
+              maxlength="5"
+              class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+            >
+          </div>
+
+
+          <div>
+            <label class="mb-2 block font-bold">
+              CVV
+            </label>
+
+            <input
+              id="cvv"
+              type="password"
+              required
+              placeholder="123"
+              maxlength="4"
+              class="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 outline-none focus:border-red-600"
+            >
+          </div>
+
+        </div>
+
+
+        <p class="rounded-lg border border-yellow-900 bg-yellow-950/30 p-3 text-sm text-yellow-300">
+          Ambiente de demonstração. Não use dados reais de cartão.
+        </p>
+
+
+        <button
+          type="submit"
+          class="w-full rounded-lg bg-red-600 p-3 font-black transition hover:bg-red-500"
+        >
+          CONFIRMAR ASSINATURA
+        </button>
+
+      </form>
+
+
+      <p
+        id="mensagemPagamento"
+        class="mt-5 text-center font-bold"
+      ></p>
+
+    </section>
+
+  </main>
+
+  <script src="membro.js"></script>
+
+</body>
+
+</html>
