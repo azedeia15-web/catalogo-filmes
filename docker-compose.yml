@@ -15,6 +15,14 @@ services:
     build: ./backend
     ports:
       - "3000:3000"
+    environment:
+      DB_USER: postgres
+      DB_HOST: db
+      DB_NAME: catalogo
+      DB_PASSWORD: 1234
+      DB_PORT: 5432
+      JWT_SECRET: trasheira-violenta-chave-secreta
+      NODE_ENV: development
     depends_on:
       - db
 
